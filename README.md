@@ -8,9 +8,12 @@ National Technical University of Athens
 
 ### API Backend Application
 1. Download and install [Node.js](https://nodejs.org/).
-2. Install and start with PM2:
+2. Install PM2 through NPM:
 	```shell
 	$ sudo npm install pm2
+	```
+3. Start as a daemon:
+	```shell
 	$ cd api-backend
 	$ pm2 start app.js
 	```
