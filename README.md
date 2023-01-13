@@ -12,9 +12,13 @@ National Technical University of Athens
 	```shell
 	$ sudo npm install pm2
 	```
-3. Start as a daemon:
+3. Install required modules:
 	```shell
 	$ cd api-backend
+	$ npm install express mariadb
+	```
+4. Start as a daemon:
+	```shell
 	$ pm2 start app.js
 	```
 
@@ -24,5 +28,5 @@ National Technical University of Athens
 | Ioannis Basdekis    | 03119198             |
 | Ioannis Dressos     | 03119608             |
 | Kriton Iordanidis   | 03119604             |
-| Pantelis Emmanouil  | 03119                |
+| Pantelis Emmanouil  | 03119018             |
 | Panagiotis Tsakonas | 03119610             |
