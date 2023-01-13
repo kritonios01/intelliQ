@@ -1,7 +1,7 @@
 const config = {
     http: {
         host: "127.0.0.1",
-        port: 91003
+        port: 9103
     },
 
     mariadb: {
