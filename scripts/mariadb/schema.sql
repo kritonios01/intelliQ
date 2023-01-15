@@ -14,8 +14,8 @@ DROP TABLE IF EXISTS `intelliq`.`sessions`;
 CREATE TABLE IF NOT EXISTS `intelliq`.`sessions` (
   `session` BIGINT(19) UNSIGNED NOT NULL PRIMARY KEY,
   `questionnaireID` BIGINT(19) UNSIGNED NOT NULL,
-  INDEX `fk_sessions_questionnaires1_idx` (`questionnaireID` ASC),
-  CONSTRAINT `fk_sessions_questionnaires1`
+  INDEX `fk_session_questionnaire_idx` (`questionnaireID` ASC),
+  CONSTRAINT `fk_session_questionnaire`
     FOREIGN KEY (`questionnaireID`)
     REFERENCES `intelliq`.`questionnaires` (`questionnaireID`)
     ON DELETE NO ACTION
@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `intelliq`.`keywords`;
 CREATE TABLE IF NOT EXISTS `intelliq`.`keywords` (
   `keywordID` BIGINT(19) UNSIGNED NOT NULL PRIMARY KEY,
   `keywordText` VARCHAR(45) NOT NULL,
-  UNIQUE INDEX `keywordText_UNIQUE` (`keywordText` ASC))
+  UNIQUE INDEX `keywordtext_unq` (`keywordText` ASC))
 ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS `intelliq`.`questions`;
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS `intelliq`.`questions` (
   `required` TINYINT NOT NULL,
   `type` ENUM("question", "profile") NOT NULL,
   PRIMARY KEY(`qID`, `questionnaireID`),
-  INDEX `fk_questions_questionnaires1_idx` (`questionnaireID` ASC),
-  CONSTRAINT `fk_questions_questionnaires1`
+  INDEX `fk_question_questionnaire_idx` (`questionnaireID` ASC),
+  CONSTRAINT `fk_question_questionnaire`
     FOREIGN KEY (`questionnaireID`)
     REFERENCES `intelliq`.`questionnaires` (`questionnaireID`)
     ON DELETE NO ACTION
@@ -56,14 +56,14 @@ CREATE TABLE IF NOT EXISTS `intelliq`.`options` (
   `opttxt` VARCHAR(255) NOT NULL,
   `nextqID` BIGINT(19) UNSIGNED NOT NULL,
   PRIMARY KEY(`optID`, `qID`, `questionnaireID`),
-  INDEX `fk_options_questions1_idx` (`qID` ASC, `questionnaireID` ASC),
-  INDEX `fk_options_questions2_idx` (`nextqID` ASC),
-  CONSTRAINT `fk_options_questions1`
+  INDEX `fk_option_question_idx` (`qID` ASC, `questionnaireID` ASC),
+  INDEX `fk_option_nextqid_idx` (`nextqID` ASC),
+  CONSTRAINT `fk_option_question`
     FOREIGN KEY (`qID` , `questionnaireID`)
     REFERENCES `intelliq`.`questions` (`qID` , `questionnaireID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_options_questions2`
+  CONSTRAINT `fk_option_nextqid`
     FOREIGN KEY (`nextqID`)
     REFERENCES `intelliq`.`questions` (`qID`)
     ON DELETE NO ACTION
@@ -78,34 +78,34 @@ CREATE TABLE IF NOT EXISTS `intelliq`.`answers` (
   `qID` BIGINT(19) UNSIGNED NOT NULL,
   `questionnaireID` BIGINT(19) UNSIGNED NOT NULL,
   PRIMARY KEY(`session`, `ans`, `qID`, `questionnaireID`),
-  INDEX `fk_answers_sessions1_idx` (`session` ASC),
-  INDEX `fk_answers_options1_idx` (`ans` ASC, `qID` ASC, `questionnaireID` ASC),
-  CONSTRAINT `fk_answers_sessions1`
+  INDEX `fk_answer_session_idx` (`session` ASC),
+  INDEX `fk_answer_option_idx` (`ans` ASC, `qID` ASC, `questionnaireID` ASC),
+  CONSTRAINT `fk_answer_session`
     FOREIGN KEY (`session`)
     REFERENCES `intelliq`.`sessions` (`session`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_answers_options1`
+  CONSTRAINT `fk_answer_option`
     FOREIGN KEY (`ans` , `qID` , `questionnaireID`)
     REFERENCES `intelliq`.`options` (`optID` , `qID` , `questionnaireID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `intelliq`.`questionnaires_has_keywords`;
+DROP TABLE IF EXISTS `intelliq`.`questionnaire_keywords`;
 
-CREATE TABLE IF NOT EXISTS `intelliq`.`questionnaires_has_keywords` (
+CREATE TABLE IF NOT EXISTS `intelliq`.`questionnaire_keywords` (
   `questionnaireID` BIGINT(19) UNSIGNED NOT NULL,
   `keywordID` BIGINT(19) UNSIGNED NOT NULL,
   PRIMARY KEY(`questionnaireID`, `keywordID`),
-  INDEX `fk_questionnaires_has_keywords_keywords1_idx` (`keywordID` ASC),
-  INDEX `fk_questionnaires_has_keywords_questionnaires_idx` (`questionnaireID` ASC),
-  CONSTRAINT `fk_questionnaires_has_keywords_questionnaires`
+  INDEX `fk_questionnaire_keyword_keyword_id_idx` (`keywordID` ASC),
+  INDEX `fk_questionnaire_keyword_questionnaire_id_idx` (`questionnaireID` ASC),
+  CONSTRAINT `fk_questionnaire_keyword_questionnaire_id`
     FOREIGN KEY (`questionnaireID`)
     REFERENCES `intelliq`.`questionnaires` (`questionnaireID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_questionnaires_has_keywords_keywords1`
+  CONSTRAINT `fk_questionnaire_keyword_keyword_id`
     FOREIGN KEY (`keywordID`)
     REFERENCES `intelliq`.`keywords` (`keywordID`)
     ON DELETE NO ACTION
