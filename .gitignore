@@ -1,1 +1,6 @@
-.gitignore
+# macOS Files
+.DS_Store
+
+# API (Node.js) Files
+api-backend/node_modules/
+api-backend/package-lock.json
