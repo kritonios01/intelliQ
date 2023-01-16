@@ -1,3 +1,2 @@
 [console_scripts]
 se2226 = cli:main
-
