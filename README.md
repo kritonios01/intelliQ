@@ -10,7 +10,7 @@ National Technical University of Athens
 1. Download and install [Node.js](https://nodejs.org/).
 2. Install PM2 through NPM:
 	```shell
-	$ sudo npm install pm2
+	$ npm install pm2 -g
 	```
 3. Install required modules:
 	```shell
@@ -19,7 +19,7 @@ National Technical University of Athens
 	```
 4. Start as a daemon:
 	```shell
-	$ pm2 start app.js
+	$ pm2 start app.js --name intelliQ-API
 	```
 
 ## Project Team
