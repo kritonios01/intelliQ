@@ -58,16 +58,13 @@ exports.resetall = async (req, res, next) => {
         await conn.query(`
             SET FOREIGN_KEY_CHECKS = 0;
 
-            SELECT @str := CONCAT('TRUNCATE TABLE ', table_schema, '.', table_name, ';')
-            FROM   information_schema.tables
-            WHERE  table_type   = 'BASE TABLE'
-            AND    table_schema = DATABASE();
-
-            PREPARE stmt FROM @str;
-
-            EXECUTE stmt;
-
-            DEALLOCATE PREPARE stmt;
+            TRUNCATE TABLE answers;
+            TRUNCATE TABLE sessions;
+            TRUNCATE TABLE options;
+            TRUNCATE TABLE questions;
+            TRUNCATE TABLE questionnaire_keywords;
+            TRUNCATE TABLE questionnaires;
+            TRUNCATE TABLE keywords;
 
             SET FOREIGN_KEY_CHECKS = 1;
         `);
