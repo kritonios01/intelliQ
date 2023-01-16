@@ -1,10 +1,10 @@
-const express = require('express');
-const router = require('./routes');
+const router = require(`./routes`);
+const express = require(`express`);
 
-const config = require('./config');
+const config = require(`./config`);
 
-const errors = require('./errors');
-const errorHandler = require('./utils/errorHandler');
+const errors = require(`./errors`);
+const errorHandler = require(`./utils/errorHandler`);
 
 const app = express();
 

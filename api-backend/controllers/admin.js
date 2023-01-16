@@ -1,6 +1,6 @@
-const errors = require("../errors");
-const pool = require("../services/database");
-const config = require('../config');
+const pool = require(`../services/database`);
+const errors = require(`../errors`);
+const config = require(`../config`);
 
 exports.healthcheck = async (req, res, next) => {
     let conn;
