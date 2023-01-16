@@ -15,7 +15,7 @@ National Technical University of Athens
 3. Install required modules:
 	```shell
 	$ cd api-backend
-	$ npm install express mariadb
+	$ npm install express mariadb multer
 	```
 4. Start as a daemon:
 	```shell
