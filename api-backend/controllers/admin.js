@@ -7,7 +7,7 @@ exports.healthcheck = async (req, res, next) => {
 
     try {
         conn = await pool.getConnection();
-        const version = (await conn.query(`SELECT VERSION() AS version`))[0].version;
+        const version = (await conn.query(`SELECT VERSION() AS version;`))[0].version;
 
         res.status(200).json({
             status: "OK",
@@ -31,7 +31,7 @@ exports.questionnaire_upd = async (req, res, next) => {
     let conn;
 
     try {
-        conn = await pool.getConnection({multipleStatements: true});
+        conn = await pool.getConnection();
 
         await conn.query(`
             INSERT INTO questionnaires
@@ -53,7 +53,7 @@ exports.resetall = async (req, res, next) => {
     let conn;
 
     try {
-        conn = await pool.getConnection({multipleStatements: true});
+        conn = await pool.getConnection();
 
         await conn.query(`
             SET FOREIGN_KEY_CHECKS = 0;
