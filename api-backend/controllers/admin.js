@@ -24,6 +24,10 @@ exports.healthcheck = async (req, res, next) => {
 };
 
 exports.questionnaire_upd = async (req, res, next) => {
+    if(!req.body) {
+        return next(new errors.UsageError(`Missing request body`, 400));
+    }
+
     let conn;
 
     try {
@@ -33,7 +37,7 @@ exports.questionnaire_upd = async (req, res, next) => {
             INSERT INTO questionnaires
             (questionnaireID, questionnaireTitle)
             VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE;`, req.body.questionnaireID, req.body.questionnaireTitle);
+            ON DUPLICATE KEY UPDATE;`, [req.body.questionnaireID, req.body.questionnaireTitle]);
 
         res.status(200).json({
             status: "OK"
@@ -57,7 +61,7 @@ exports.resetall = async (req, res, next) => {
             SELECT @str := CONCAT('TRUNCATE TABLE ', table_schema, '.', table_name, ';')
             FROM   information_schema.tables
             WHERE  table_type   = 'BASE TABLE'
-            AND    table_schema = ?;
+            AND    table_schema = DATABASE();
 
             PREPARE stmt FROM @str;
 
@@ -66,7 +70,7 @@ exports.resetall = async (req, res, next) => {
             DEALLOCATE PREPARE stmt;
 
             SET FOREIGN_KEY_CHECKS = 1;
-        `, config.mariadb.database);
+        `);
 
         res.status(200).json({
             status: "OK"
@@ -88,7 +92,7 @@ exports.resetq = async (req, res, next) => {
     try {
         conn = await pool.getConnection();
 
-        await conn.query(`DELETE FROM answers WHERE questionnaireID = ?;`, req.params.questionnaireID);
+        await conn.query(`DELETE FROM answers WHERE questionnaireID = ?;`, [req.params.questionnaireID]);
 
         res.status(200).json({
             status: "OK"
