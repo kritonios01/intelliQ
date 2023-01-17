@@ -11,7 +11,6 @@ def main():
 
 
 
-#ola exoun ypoxrewtika to f
 @main.command(short_help='No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def healthcheck(format):
@@ -24,7 +23,7 @@ def healthcheck(format):
 			json_data=response.json()
 			for key in json_data:
 				print(f'{key}: {json_data[key]}')
-		else:
+		else:#csv case
 			pass
 
 @main.command(short_help='No parameters')
@@ -39,7 +38,7 @@ def resetall(format):
 			json_data=response.json()
 			for key in json_data:
 				print(f'{key}: {json_data[key]}')
-		else:
+		else:#csv case 
 			pass
 
 
@@ -47,7 +46,21 @@ def resetall(format):
 @click.option('--source', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaire_upd(source, format):
-	click.echo('UPD')
+	try:
+		file = {'file1': open(source,'r')}
+		click.echo('Uploading Questionnaire...')
+		response = http.post(f'https://api.intelliq.site/intelliq_api/admin/questionnaire_upd?format={format}', files=file)
+		if response.status_code != 200:
+			click.echo(f"Error! (Code: {response.status_code})")
+		else:
+			if(format=='json'):
+				json_data=response.json()
+				for key in json_data:
+					print(f'{key}: {json_data[key]}')
+			else:#csv case 
+				pass
+	except IOError:
+		click.echo('File Not Found!')
 
 @main.command(short_help='Parameters: --questionnaire_id')
 @click.option('--questionnaire_id', required=True)
@@ -82,46 +95,41 @@ def doanswer(questionnaire_id, question_id, session_id, option_id, format):
 @click.option('--session_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def getsessionanswers(questionnaire_id, session_id, format):
-	click.echo("Return answer")
-	with open('getsession.json', 'r') as source:
-		json_data = json.load(source)
-		for answer in json_data['answers']:
-			print(f'{answer["qID"]}: {answer["ans"]}')
+	click.echo('Fetching Answers...')
+	response = http.get(f'/getquestionanswers/{questionnaire_id}/{session_id}')
+	if response.status_code != 200:
+		click.echo(f"Error retrieving data (Code: {response.status_code})")
+	else:
+		if(format=='json'):
+			json_data=response.json()
+			for key in json_data['asnwers']:
+				print(f'{key["qID"]}: {key["ans"]}')
+		else:#csv case 
+			pass
 
 @main.command(short_help='Parameters: --questionnaire_id, --question_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--question_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def getquestionanswers(questionnaire_id, question_id, format):
-	'''response=http.get('/getquestionanswers/:{questionnaire_id}/:{question_id}')
+	click.echo('Fetching Answers...')
+	response = http.get(f'/getquestionanswers/{questionnaire_id}/{question_id}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
-		json_data=response.json()'''
+		if(format=='json'):
+			json_data=response.json()
+			for key in json_data['asnwers']:
+				print(key["ans"])
+		else:#csv case 
+			pass
 
-	#click.echo(f'')
-	with open('ex1.json', 'r') as source:
+	'''with open('ex1.json', 'r') as source:
 		json_data = json.load(source)
 		for answer in json_data['answers']:
-			print(answer["ans"])
+			print(answer["ans"])'''
 
 
-
-	'''with open('example1.json', 'r') as source:
-		json_data = json.load(source)
-		if questionnaire_id in json_data["questionnaireID"]:
-			answers=[]
-			for i in json_data['questions']:
-				if i['qID'] == question_id:
-					for j in i['options']:
-						answers.append(j['opttxt'])
-					break
-			click.echo('This question does not exist')
-		else: 
-			click.echo('This questionnaire does not exist')
-		click.echo(f'Question {question_id} found in questionnaire {questionnaire_id} has the following possible answers:')
-		for answer in answers:
-			print(answer)'''
 
 
 
