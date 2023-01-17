@@ -1,24 +1,35 @@
+const { Parser } = require('json2csv');
+
 const pool = require(`../services/database`);
 const errors = require(`../errors`);
 const config = require(`../config`);
 
 exports.healthcheck = async (req, res, next) => {
-    let conn;
+    let conn, resdata;
 
     try {
         conn = await pool.getConnection();
         const version = (await conn.query(`SELECT VERSION() AS version;`))[0].version;
 
-        res.status(200).json({
+        resdata = {
             status: "OK",
             dbconnection: version
-        });
+        };
     } catch(err) {
-        res.status(200).json({
+        resdata = {
             status: "failed",
             dbconnection: "na"
-        });
+        };
     } finally {
+        if(req.query.format == `csv`) {
+            const parser = new Parser(Object.keys(resdata));
+
+            res.type(`text/csv`);
+            res.send(parser.parse(resdata));
+        } else {
+            res.status(200).json(resdata);
+        }
+
         if(conn) conn.end();
     }
 };
@@ -32,15 +43,15 @@ exports.questionnaire_upd = async (req, res, next) => {
         return next(new errors.UsageError(`Unsupported file mimetype (accepted: application/json)`, 400));
     }
 
-    let data;
+    let reqdata;
 
     try {
-        data = JSON.parse(req.file.buffer.toString(`UTF8`));
+        reqdata = JSON.parse(req.file.buffer.toString(`UTF8`));
     } catch(err) {
         return next(new errors.UsageError(`Invalid JSON data`, 400));
     }
 
-    let conn;
+    let conn, resdata;
 
     try {
         conn = await pool.getConnection();
@@ -50,20 +61,30 @@ exports.questionnaire_upd = async (req, res, next) => {
             (questionnaireID, questionnaireTitle)
             VALUES (?, ?)
             ON DUPLICATE KEY UPDATE
-              questionnaireTitle = ?;`, [data.questionnaireID, data.questionnaireTitle, data.questionnaireTitle]);
+              questionnaireTitle = ?;`,
+        [reqdata.questionnaireID, reqdata.questionnaireTitle, reqdata.questionnaireTitle]);
 
-        res.status(200).json({
+        resdata = {
             status: "OK"
-        });
+        };
     } catch(err) {
         return next(err);
     } finally {
+        if(req.query.format == `csv`) {
+            const parser = new Parser(Object.keys(resdata));
+
+            res.type(`text/csv`);
+            res.send(parser.parse(resdata));
+        } else {
+            res.status(200).json(resdata);
+        }
+
         if(conn) conn.end();
     }
 };
 
 exports.resetall = async (req, res, next) => {
-    let conn;
+    let conn, resdata;
 
     try {
         conn = await pool.getConnection();
@@ -82,12 +103,21 @@ exports.resetall = async (req, res, next) => {
             SET FOREIGN_KEY_CHECKS = 1;
         `);
 
-        res.status(200).json({
+        resdata = {
             status: "OK"
-        });
+        };
     } catch(err) {
         return next(err);
     } finally {
+        if(req.query.format == `csv`) {
+            const parser = new Parser(Object.keys(resdata));
+
+            res.type(`text/csv`);
+            res.send(parser.parse(resdata));
+        } else {
+            res.status(200).json(resdata);
+        }
+
         if(conn) conn.end();
     }
 };
@@ -97,19 +127,28 @@ exports.resetq = async (req, res, next) => {
         return next(new errors.UsageError(`Missing parameter: questionnaireID`, 400));
     }
 
-    let conn;
+    let conn, resdata;
 
     try {
         conn = await pool.getConnection();
 
         await conn.query(`DELETE FROM answers WHERE questionnaireID = ?;`, [req.params.questionnaireID]);
 
-        res.status(200).json({
+        resdata = {
             status: "OK"
-        });
+        };
     } catch(err) {
         return next(err);
     } finally {
+        if(req.query.format == `csv`) {
+            const parser = new Parser(Object.keys(resdata));
+
+            res.type(`text/csv`);
+            res.send(parser.parse(resdata));
+        } else {
+            res.status(200).json(resdata);
+        }
+
         if(conn) conn.end();
     }
 };
