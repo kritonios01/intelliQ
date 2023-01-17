@@ -1,4 +1,4 @@
-#!/Users/kritonios/Desktop/SoftEng22-26/cli/virtenv/bin/python3
+#!/Users/kritonios/Desktop/SoftEng22-26/cli/virtenv/bin/python3.11
 # -*- coding: utf-8 -*-
 import re
 import sys

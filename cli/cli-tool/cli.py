@@ -10,19 +10,43 @@ def main():
 	All commands require the --format parameter'''
 
 
+
 #ola exoun ypoxrewtika to f
 @main.command(short_help='No parameters')
-def healthcheck():
-	click.echo('health')
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def healthcheck(format):
+	click.echo('Checking connection with Database...')
+	response=http.get(f'https://api.intelliq.site/intelliq_api/admin/healthcheck?format={format}')
+	if response.status_code != 200:
+		click.echo(f"Error retrieving data (Code: {response.status_code})")
+	else:
+		if(format=='json'):
+			json_data=response.json()
+			for key in json_data:
+				print(f'{key}: {json_data[key]}')
+		else:
+			pass
 
 @main.command(short_help='No parameters')
-def resetall():
-	click.echo('reset all')
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def resetall(format):
+	click.echo('Resetting all...')
+	response=http.post(f'https://api.intelliq.site/intelliq_api/admin/resetall?format={format}')
+	if response.status_code != 200:
+		click.echo(f"Error! (Code: {response.status_code})")
+	else:
+		if(format=='json'):
+			json_data=response.json()
+			for key in json_data:
+				print(f'{key}: {json_data[key]}')
+		else:
+			pass
+
 
 @main.command(short_help='Parameters: --source')
 @click.option('--source', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
-def questionnaire_upd(source, format): # exei provlima me ti pavla
+def questionnaire_upd(source, format):
 	click.echo('UPD')
 
 @main.command(short_help='Parameters: --questionnaire_id')
@@ -68,7 +92,7 @@ def getsessionanswers(questionnaire_id, session_id, format):
 @click.option('--questionnaire_id', required=True)
 @click.option('--question_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
-def getquestionanswers(questionnaire_id, question_id, format): 	#isws ginetai kalytera
+def getquestionanswers(questionnaire_id, question_id, format):
 	'''response=http.get('/getquestionanswers/:{questionnaire_id}/:{question_id}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
