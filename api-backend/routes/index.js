@@ -2,6 +2,9 @@ const multer = require(`multer`);
 const express = require(`express`);
 const controllers = require(`../controllers`);
 
+const storage = multer.memoryStorage();
+const upload = multer({storage: storage});
+
 const router = express.Router();
 
 /*
@@ -14,7 +17,7 @@ router
 
 router
     .route("/intelliq_api/admin/questionnaire_upd")
-    .post(multer().none(), controllers.admin.questionnaire_upd);
+    .post(upload.single(`file`), controllers.admin.questionnaire_upd);
 
 router
     .route("/intelliq_api/admin/resetall")

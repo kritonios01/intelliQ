@@ -24,8 +24,20 @@ exports.healthcheck = async (req, res, next) => {
 };
 
 exports.questionnaire_upd = async (req, res, next) => {
-    if(!req.body) {
-        return next(new errors.UsageError(`Missing request body`, 400));
+    if(!req.file) {
+        return next(new errors.UsageError(`Missing multipart/form-data 'file' field`, 400));
+    }
+
+    if(req.file.mimetype != `application/json`) {
+        return next(new errors.UsageError(`Unsupported file mimetype (accepted: application/json)`, 400));
+    }
+
+    let data;
+
+    try {
+        data = JSON.parse(req.file.buffer.toString(`UTF8`));
+    } catch(err) {
+        return next(new errors.UsageError(`Invalid JSON data`, 400));
     }
 
     let conn;
@@ -37,7 +49,8 @@ exports.questionnaire_upd = async (req, res, next) => {
             INSERT INTO questionnaires
             (questionnaireID, questionnaireTitle)
             VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE;`, [req.body.questionnaireID, req.body.questionnaireTitle]);
+            ON DUPLICATE KEY UPDATE
+              questionnaireTitle = ?;`, [data.questionnaireID, data.questionnaireTitle, data.questionnaireTitle]);
 
         res.status(200).json({
             status: "OK"
