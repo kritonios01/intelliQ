@@ -15,12 +15,21 @@ National Technical University of Athens
 3. Install required modules:
 	```shell
 	$ cd api-backend
-	$ npm install express mariadb multer
+	$ npm install express mariadb multer https
 	```
-4. Start as a daemon:
+4. Open [config.js](api-backend/config.js) and configure the application.
+	- For HTTPS an SSL certificate is required. You may find instructions on how to create one yourself [below](#creating-a-self-signed-ssl-certificate).
+5. Start as a daemon:
 	```shell
 	$ pm2 start app.js --name intelliQ-API
 	```
+
+#### Creating a self-signed SSL certificate
+
+```shell
+$ openssl genrsa -out key.pem
+$ openssl req -new -key key.pem -out csr.pem
+```
 
 ## Project Team
 | Full Name           | Registration Number  |
