@@ -40,15 +40,52 @@ exports.questionnaire_upd = async (req, res, next) => {
     }
 
     if(req.file.mimetype != `application/json`) {
-        return next(new errors.UsageError(`Unsupported file mimetype (accepted: application/json)`, 400));
+        return next(new errors.UsageError(`Unsupported file mimetype (allowed: application/json)`, 400));
     }
 
-    let reqdata;
+    let questionnaire;
 
     try {
-        reqdata = JSON.parse(req.file.buffer.toString(`UTF8`));
+        questionnaire = JSON.parse(req.file.buffer.toString(`UTF8`));
     } catch(err) {
-        return next(new errors.UsageError(`Invalid JSON data`, 400));
+        return next(new errors.UsageError(`Could not parse JSON, check syntax`, 400));
+    }
+
+    try {
+        if(!(questionnaire.questionnaireID && questionnaire.questionnaireTitle && questionnaire.keywords && questionnaire.questions)) {
+            return next(new errors.UsageError(`Invalid questionnaire data`, 400));
+        }
+
+        const qids = [];
+        const nextqids = [];
+
+        for(const q in questionnaire.questions) {
+            const question = questionnaire.questions[q];
+
+            if(!(question.qID && question.qtext && question.required && question.type && question.options)) {
+                return next(new errors.UsageError(`Invalid questionnaire data: question ` + q + ` malformed`, 400));
+            }
+
+            qids.push(question.qID);
+
+            for(const o in question.options) {
+                const option = questionnaire.questions[q].options[o];
+
+                if(!(option.optID && option.opttxt && option.nextqID)) {
+                    return next(new errors.UsageError(`Invalid questionnaire data: option ` + o + ` of question ` + q + ` malformed`, 400));
+                }
+
+                if(option.nextqID != `-`) nextqids.push(option.nextqID);
+            }
+        }
+
+        for(const nextqid in nextqids) {
+            if(!qids.includes(nextqids[nextqid])) {
+                return next(new errors.UsageError(`Invalid questionnaire data: foreign key checks failed`, 400));
+            }
+        }
+    } catch(err) {
+        return next(new errors.UsageError(`Invalid questionnaire data`, 400));
     }
 
     let conn, resdata;
@@ -57,12 +94,93 @@ exports.questionnaire_upd = async (req, res, next) => {
         conn = await pool.getConnection();
 
         await conn.query(`
+            SET
+              @questionnaireID = ?,
+              @questionnaireTitle = ?;
+
             INSERT INTO questionnaires
             (questionnaireID, questionnaireTitle)
-            VALUES (?, ?)
+            VALUES (@questionnaireID, @questionnaireTitle)
             ON DUPLICATE KEY UPDATE
-              questionnaireTitle = ?;`,
-        [reqdata.questionnaireID, reqdata.questionnaireTitle, reqdata.questionnaireTitle]);
+              questionnaireTitle = @questionnaireTitle;`,
+        [questionnaire.questionnaireID, questionnaire.questionnaireTitle]);
+
+        for(const k in questionnaire.keywords) {
+            const keywordText = questionnaire.keywords[k];
+
+            let keywordID;
+            try {
+                keywordID = (await conn.query(`SELECT keywordID FROM keywords WHERE keywordText = ?;`, [keywordText]))[0].keywordID;
+            } catch(err) {}
+
+            if(!keywordID) {
+                await conn.query(`
+                    SET
+                      @keywordText = ?;
+
+                    INSERT INTO keywords
+                    (keywordText)
+                    VALUES (@keywordText);`,
+                [keywordText]);
+
+                keywordID = (await conn.query(`SELECT keywordID FROM keywords WHERE keywordText = ?;`, [keywordText]))[0].keywordID;
+            }
+
+            await conn.query(`
+                SET
+                  @questionnaireID = ?,
+                  @keywordID = ?;
+
+                INSERT IGNORE INTO questionnaire_keywords
+                (questionnaireID, keywordID)
+                VALUES (@questionnaireID, @keywordID);`,
+            [questionnaire.questionnaireID, keywordID]);
+        }
+
+        for(const q in questionnaire.questions) {
+            const question = questionnaire.questions[q];
+
+            await conn.query(`
+                SET
+                  @qID = ?,
+                  @questionnaireID = ?,
+                  @qtext = ?,
+                  @required = ?,
+                  @type = ?;
+
+                INSERT INTO questions
+                (qID, questionnaireID, qtext, required, type)
+                VALUES (@qID, @questionnaireID, @qtext, @required, @type)
+                ON DUPLICATE KEY UPDATE
+                  qtext = @qtext,
+                  required = @required,
+                  type = @type;`,
+            [question.qID, questionnaire.questionnaireID, question.qtext, question.required, question.type]);
+
+            for(const o in question.options) {
+                const option = questionnaire.questions[q].options[o];
+
+                await conn.query(`
+                    SET FOREIGN_KEY_CHECKS = 0;
+
+                    SET
+                      @optID = ?,
+                      @qID = ?,
+                      @questionnaireID = ?,
+                      @opttxt = ?,
+                      @nextqID = ?;
+
+                    INSERT INTO options
+                    (optID, qID, questionnaireID, opttxt, nextqID)
+                    VALUES (@optID, @qID, @questionnaireID, @opttxt, @nextqID)
+                    ON DUPLICATE KEY UPDATE
+                      opttxt = @opttxt,
+                      nextqID = @nextqID;
+
+                    SET FOREIGN_KEY_CHECKS = 1;`,
+                [option.optID, question.qID, questionnaire.questionnaireID, option.opttxt, (option.nextqID != `-` ? option.nextqID : null)]);
+            }
+        }
 
         resdata = {
             status: "OK"
