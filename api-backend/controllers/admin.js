@@ -1,8 +1,7 @@
 const { Parser } = require('json2csv');
 
-const pool = require(`../services/database`);
 const errors = require(`../errors`);
-const config = require(`../config`);
+const pool = require(`../services/database`);
 
 exports.healthcheck = async (req, res, next) => {
     let conn, resdata;

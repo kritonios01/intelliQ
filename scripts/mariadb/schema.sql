@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `intelliq`.`answers` (
   `ans` VARCHAR(8) NOT NULL,
   `qID` VARCHAR(8) NOT NULL,
   `questionnaireID` VARCHAR(8) NOT NULL,
-  PRIMARY KEY(`session`, `ans`, `qID`, `questionnaireID`),
+  PRIMARY KEY(`session`, `qID`, `questionnaireID`),
   INDEX `fk_answer_session_idx` (`session` ASC),
   INDEX `fk_answer_option_idx` (`ans` ASC, `qID` ASC, `questionnaireID` ASC),
   CONSTRAINT `fk_answer_session`
