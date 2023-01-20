@@ -8,24 +8,33 @@ const upload = multer({storage: storage});
 const router = express.Router();
 
 /*
+    Errors
+*/
+const methodNotAllowed = (req, res, next) => res.status(405).send();
+
+/*
     Administrative Endpoints Routes
 */
 
 router
     .route("/intelliq_api/admin/healthcheck")
-    .get(controllers.admin.healthcheck);
+    .get(controllers.admin.healthcheck)
+    .all(methodNotAllowed);
 
 router
     .route("/intelliq_api/admin/questionnaire_upd")
-    .post(upload.single(`file`), controllers.admin.questionnaire_upd);
+    .post(upload.single(`file`), controllers.admin.questionnaire_upd)
+    .all(methodNotAllowed);
 
 router
     .route("/intelliq_api/admin/resetall")
-    .post(controllers.admin.resetall);
+    .post(controllers.admin.resetall)
+    .all(methodNotAllowed);
 
 router
     .route("/intelliq_api/admin/resetq/:questionnaireID")
-    .post(controllers.admin.resetq);
+    .post(controllers.admin.resetq)
+    .all(methodNotAllowed);
 
 /*
     User Endpoints Routes
@@ -33,22 +42,27 @@ router
 
 router
     .route("/intelliq_api/questionnaire/:questionnaireID")
-    .get(controllers.user.questionnaire);
+    .get(controllers.user.questionnaire)
+    .all(methodNotAllowed);
 
 router
     .route("/intelliq_api/question/:questionnaireID/:questionID")
-    .get(controllers.user.question);
+    .get(controllers.user.question)
+    .all(methodNotAllowed);
 
 router
     .route("/intelliq_api/doanswer/:questionnaireID/:questionID/:session/:optionID")
-    .post(controllers.user.doanswer);
+    .post(controllers.user.doanswer)
+    .all(methodNotAllowed);
 
 router
     .route("/intelliq_api/getsessionanswers/:questionnaireID/:session")
-    .get(controllers.user.getsessionanswers);
+    .get(controllers.user.getsessionanswers)
+    .all(methodNotAllowed);
 
 router
     .route("/intelliq_api/getquestionanswers/:questionnaireID/:questionID")
-    .get(controllers.user.getquestionanswers);
+    .get(controllers.user.getquestionanswers)
+    .all(methodNotAllowed);
 
 module.exports = router;
