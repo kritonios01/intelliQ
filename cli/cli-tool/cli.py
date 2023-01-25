@@ -3,6 +3,8 @@
 import click
 import requests as http
 import json
+import csv
+
 
 @click.group()
 def main():
@@ -23,8 +25,11 @@ def healthcheck(format):
 			json_data=response.json()
 			for key in json_data:
 				print(f'{key}: {json_data[key]}')
-		else:#csv case
-			pass
+		else:
+			csv_reader = csv.DictReader(response)
+			for row in csv_reader:
+				print(f'{row}: {csv_reader[row]}')
+
 
 @main.command(short_help='No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
