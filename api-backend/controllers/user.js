@@ -28,10 +28,17 @@ exports.questionnaire = async (req, res, next) => {
     } finally {
         if(resdata) {
             if(req.query.format == `csv`) {
-                const parser = new Parser(Object.keys(resdata));
+                resdata.keywords = resdata.keywords.join(`, `);
+
+                for(question in resdata.questions) {
+                    resdata.questions[question] = {...resdata, ...resdata.questions[question]};
+                    delete resdata.questions[question].questions;
+                }
+
+                const parser = new Parser(Object.keys(resdata.questions));
 
                 res.type(`text/csv`);
-                res.send(parser.parse(resdata));
+                res.send(parser.parse(resdata.questions));
             } else {
                 res.status(200).json(resdata);
             }
@@ -69,10 +76,15 @@ exports.question = async (req, res, next) => {
     } finally {
         if(resdata) {
             if(req.query.format == `csv`) {
-                const parser = new Parser(Object.keys(resdata));
+                for(option in resdata.options) {
+                    resdata.options[option] = {...resdata, ...resdata.options[option]};
+                    delete resdata.options[option].options;
+                }
+
+                const parser = new Parser(Object.keys(resdata.options));
 
                 res.type(`text/csv`);
-                res.send(parser.parse(resdata));
+                res.send(parser.parse(resdata.options));
             } else {
                 res.status(200).json(resdata);
             }
@@ -164,10 +176,15 @@ exports.getsessionanswers = async (req, res, next) => {
     } finally {
         if(resdata) {
             if(req.query.format == `csv`) {
-                const parser = new Parser(Object.keys(resdata));
+                for(answer in resdata.answers) {
+                    resdata.answers[answer] = {...resdata, ...resdata.answers[answer]};
+                    delete resdata.answers[answer].answers;
+                }
+
+                const parser = new Parser(Object.keys(resdata.answers));
 
                 res.type(`text/csv`);
-                res.send(parser.parse(resdata));
+                res.send(parser.parse(resdata.answers));
             } else {
                 res.status(200).json(resdata);
             }
@@ -206,10 +223,15 @@ exports.getquestionanswers = async (req, res, next) => {
     } finally {
         if(resdata) {
             if(req.query.format == `csv`) {
-                const parser = new Parser(Object.keys(resdata));
+                for(answer in resdata.answers) {
+                    resdata.answers[answer] = {...resdata, ...resdata.answers[answer]};
+                    delete resdata.answers[answer].answers;
+                }
+
+                const parser = new Parser(Object.keys(resdata.answers));
 
                 res.type(`text/csv`);
-                res.send(parser.parse(resdata));
+                res.send(parser.parse(resdata.answers));
             } else {
                 res.status(200).json(resdata);
             }
