@@ -8,11 +8,16 @@ exports.healthcheck = async (req, res, next) => {
 
     try {
         conn = await pool.getConnection();
-        const version = (await conn.query(`SELECT VERSION() AS version;`))[0].version;
+        const status = (await conn.query(`
+            SELECT
+              SUBSTRING_INDEX(USER(), '@', -1) AS host,
+              @@port AS port,
+              SUBSTRING_INDEX(USER(), '@', 1) AS user,
+              DATABASE() AS current_database;`))[0];
 
         resdata = {
             status: "OK",
-            dbconnection: version
+            dbconnection: `${status.user}:${status.current_database}@${status.host}:${status.port}`
         };
     } catch(err) {
         resdata = {
