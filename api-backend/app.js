@@ -13,8 +13,8 @@ const app = express();
 app.use(express.json());
 app.use(router);
 
-app.all("*", (req, res, next) => {
-    next(new errors.UsageError(`${req.method} ${req.originalUrl} is not supported`, 404));
+app.all(`*`, (req, res, next) => {
+    next(new errors.UsageError(`Resource not found`, 404));
 });
 app.use(errorHandler);
 

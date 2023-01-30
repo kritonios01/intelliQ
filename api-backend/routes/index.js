@@ -1,5 +1,6 @@
 const multer = require(`multer`);
 const express = require(`express`);
+const errors = require(`../errors`);
 const controllers = require(`../controllers`);
 
 const storage = multer.memoryStorage();
@@ -10,10 +11,10 @@ const router = express.Router();
 /*
     Errors
 */
-const methodNotAllowed = (req, res, next) => res.status(405).send();
+const methodNotAllowed = (req, res, next) => next(new errors.UsageError(`Method not supported`, 405));
 
 /*
-    Administrative Endpoints Routes
+    Administrative Endpoint Routes
 */
 
 router
@@ -37,7 +38,7 @@ router
     .all(methodNotAllowed);
 
 /*
-    User Endpoints Routes
+    User Endpoint Routes
 */
 
 router

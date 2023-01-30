@@ -47,7 +47,7 @@ exports.questionnaire_upd = async (req, res, next) => {
     try {
         questionnaire = JSON.parse(req.file.buffer.toString(`UTF8`));
     } catch(err) {
-        return next(new errors.UsageError(`Could not parse JSON, check syntax`, 400));
+        return next(new errors.UsageError(`JSON syntax error`, 400));
     }
 
     try {
