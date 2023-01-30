@@ -18,11 +18,17 @@ app.all(`*`, (req, res, next) => {
 });
 app.use(errorHandler);
 
+/*
+    Configuration Checks
+*/
 if(config.http.host == config.https.host && config.http.port == config.https.port) {
     console.error(`HTTP and HTTPS servers can't both be bound to the same host and port.`);
     process.exit(1);
 }
 
+/*
+    HTTP Server
+*/
 if(config.http.enabled) {
     app.listen(config.http.port, config.http.host, () => {
         console.log(`Listening on http://${config.http.host}:${config.http.port}`);
@@ -30,6 +36,9 @@ if(config.http.enabled) {
 
 }
 
+/*
+    HTTPS/SSL Server
+*/
 if(config.https.enabled) {
     https.createServer(
         {

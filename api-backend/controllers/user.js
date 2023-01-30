@@ -3,6 +3,13 @@ const { Parser } = require('json2csv');
 const errors = require(`../errors`);
 const pool = require(`../services/database`);
 
+/*
+    Endpoint Implementation
+    Resource URL: /questionnaire/:questionnaireID
+    Supported Methods: GET
+
+    Returns the details and questions of a questionnaire
+*/
 exports.questionnaire = async (req, res, next) => {
     if(!req.params.questionnaireID) {
         return next(new errors.UsageError(`Missing parameter: questionnaireID`, 400));
@@ -48,6 +55,13 @@ exports.questionnaire = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /question/:questionnaireID/:questionID
+    Supported Methods: GET
+
+    Returns the details and options of a question
+*/
 exports.question = async (req, res, next) => {
     const missingParameters = [];
 
@@ -94,6 +108,13 @@ exports.question = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /doanswer/:questionnaireID/:questionID/:session/:optionID
+    Supported Methods: POST
+
+    Registers an option as the answer to a questionnaire's question during a specific session
+*/
 exports.doanswer = async (req, res, next) => {
     const missingParameters = [];
 
@@ -147,6 +168,13 @@ exports.doanswer = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /getsessionanswers/:questionnaireID/:session
+    Supported Methods: GET
+
+    Returns all answers given to the questions of a questionnaire during a session
+*/
 exports.getsessionanswers = async (req, res, next) => {
     const missingParameters = [];
 
@@ -194,6 +222,13 @@ exports.getsessionanswers = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /getquestionanswers/:questionnaireID/:questionID
+    Supported Methods: GET
+
+    Returns all answers given to a specific question of a questionnaire over all sessions
+*/
 exports.getquestionanswers = async (req, res, next) => {
     const missingParameters = [];
 
