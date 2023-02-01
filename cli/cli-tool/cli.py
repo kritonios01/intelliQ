@@ -3,6 +3,7 @@
 import click
 import requests as http
 import json
+import csv
 
 @click.group()
 def main():
@@ -24,7 +25,10 @@ def healthcheck(format):
 			for key in json_data:
 				print(f'{key}: {json_data[key]}')
 		else:#csv case
-			pass
+			decoded=response.iter_lines()
+			csv_data=csv.reader(decoded, delimiter=',')
+			for row in csv_data:
+				print(row)
 
 @main.command(short_help='No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
@@ -47,7 +51,7 @@ def resetall(format):
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaire_upd(source, format):
 	try:
-		file = {'file1': open(source,'r')}
+		file = {'file': ('file.json', open(source,'r'), 'application/json', {})}
 		click.echo('Uploading Questionnaire...')
 		response = http.post(f'https://api.intelliq.site/intelliq_api/admin/questionnaire_upd?format={format}', files=file)
 		if response.status_code != 200:
