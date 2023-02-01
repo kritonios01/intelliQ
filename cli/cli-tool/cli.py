@@ -21,14 +21,14 @@ def healthcheck(format):
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
-		if(format=='json'):
+		if(format=='csv'):             
+			csv_reader = csv.reader(response.text)
+			for row in csv_reader:
+				print(row)
+		else:
 			json_data=response.json()
 			for key in json_data:
 				print(f'{key}: {json_data[key]}')
-		else:
-			csv_reader = csv.DictReader(response)
-			for row in csv_reader:
-				print(f'{row}: {csv_reader[row]}')
 
 
 @main.command(short_help='No parameters')
@@ -39,12 +39,12 @@ def resetall(format):
 	if response.status_code != 200:
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
-		if(format=='json'):
+		if(format=='csv'):
+			pass			
+		else:
 			json_data=response.json()
 			for key in json_data:
 				print(f'{key}: {json_data[key]}')
-		else:#csv case 
-			pass
 
 
 @main.command(short_help='Parameters: --source')
@@ -58,12 +58,12 @@ def questionnaire_upd(source, format):
 		if response.status_code != 200:
 			click.echo(f"Error! (Code: {response.status_code})")
 		else:
-			if(format=='json'):
+			if(format=='csv'):
+				pass
+			else:
 				json_data=response.json()
 				for key in json_data:
 					print(f'{key}: {json_data[key]}')
-			else:#csv case 
-				pass
 	except IOError:
 		click.echo('File Not Found!')
 
@@ -105,12 +105,12 @@ def getsessionanswers(questionnaire_id, session_id, format):
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
-		if(format=='json'):
+		if(format=='csv'):
+			pass
+		else: 
 			json_data=response.json()
 			for key in json_data['asnwers']:
 				print(f'{key["qID"]}: {key["ans"]}')
-		else:#csv case 
-			pass
 
 @main.command(short_help='Parameters: --questionnaire_id, --question_id')
 @click.option('--questionnaire_id', required=True)
@@ -118,23 +118,21 @@ def getsessionanswers(questionnaire_id, session_id, format):
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def getquestionanswers(questionnaire_id, question_id, format):
 	click.echo('Fetching Answers...')
-	response = http.get(f'/getquestionanswers/{questionnaire_id}/{question_id}')
+	response = http.get(f'https://api.intelliq.site/intelliq_api/getquestionanswers/{questionnaire_id}/{question_id}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
-		if(format=='json'):
+		if(format=='csv'):
+			csv_reader = csv.reader(response.text)
+			for row in csv_reader:
+				print(row)
+		else:
 			json_data=response.json()
 			for key in json_data['asnwers']:
 				print(key["ans"])
-		else:#csv case 
-			pass
+			
 
 	'''with open('ex1.json', 'r') as source:
 		json_data = json.load(source)
 		for answer in json_data['answers']:
 			print(answer["ans"])'''
-
-
-
-
-
