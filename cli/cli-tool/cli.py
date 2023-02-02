@@ -22,6 +22,7 @@ def healthcheck(format):
 	else:
 		if(format=='csv'):             
 			csv_reader = csv.reader(response.text)
+			print(csv_reader)
 			for row in csv_reader:
 				print(row)
 		else:

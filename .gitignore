@@ -4,3 +4,4 @@
 # API (Node.js) Files
 api-backend/node_modules/
 api-backend/package-lock.json
+cli/virtenv/
