@@ -5,6 +5,9 @@ module.exports = (err, req, res, next) => {
     err.status = err.status || "error";
 
     let resdata;
+    /*
+        Multer Error Handling
+    */
     if(err.name == `MulterError`) {
         err.statusCode = 400;
 
@@ -12,6 +15,9 @@ module.exports = (err, req, res, next) => {
             status: "failed",
             reason: err.message
         };
+    /*
+        SQL Error Handling
+    */
     } else if(err.name == `SqlError`) {
         err.statusCode = 200;
 
@@ -19,6 +25,9 @@ module.exports = (err, req, res, next) => {
             status: "failed",
             reason: err.text
         };
+    /*
+        Other Error Handling
+    */
     } else {
         resdata = {
             status: err.status,

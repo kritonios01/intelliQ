@@ -13,16 +13,22 @@ const app = express();
 app.use(express.json());
 app.use(router);
 
-app.all("*", (req, res, next) => {
-    next(new errors.UsageError(`${req.method} ${req.originalUrl} is not supported`, 404));
+app.all(`*`, (req, res, next) => {
+    next(new errors.UsageError(`Resource not found`, 404));
 });
 app.use(errorHandler);
 
+/*
+    Configuration Checks
+*/
 if(config.http.host == config.https.host && config.http.port == config.https.port) {
     console.error(`HTTP and HTTPS servers can't both be bound to the same host and port.`);
     process.exit(1);
 }
 
+/*
+    HTTP Server
+*/
 if(config.http.enabled) {
     app.listen(config.http.port, config.http.host, () => {
         console.log(`Listening on http://${config.http.host}:${config.http.port}`);
@@ -30,6 +36,9 @@ if(config.http.enabled) {
 
 }
 
+/*
+    HTTPS/SSL Server
+*/
 if(config.https.enabled) {
     https.createServer(
         {

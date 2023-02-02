@@ -3,16 +3,28 @@ const { Parser } = require('json2csv');
 const errors = require(`../errors`);
 const pool = require(`../services/database`);
 
+/*
+    Endpoint Implementation
+    Resource URL: /admin/healthcheck
+    Supported Methods: GET
+
+    Returns the status of the application's connection to the database
+*/
 exports.healthcheck = async (req, res, next) => {
     let conn, resdata;
 
     try {
         conn = await pool.getConnection();
-        const version = (await conn.query(`SELECT VERSION() AS version;`))[0].version;
+        const status = (await conn.query(`
+            SELECT
+              SUBSTRING_INDEX(USER(), '@', -1) AS host,
+              @@port AS port,
+              SUBSTRING_INDEX(USER(), '@', 1) AS user,
+              DATABASE() AS current_database;`))[0];
 
         resdata = {
             status: "OK",
-            dbconnection: version
+            dbconnection: `${status.user}:${status.current_database}@${status.host}:${status.port}`
         };
     } catch(err) {
         resdata = {
@@ -33,6 +45,14 @@ exports.healthcheck = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /admin/questionnaire_upd
+    Supported Methods: POST
+
+    Creates or updates a questionnaire along with its questions and their options
+    Accepts a JSON file encoded as multipart/form data for the questionnaire data
+*/
 exports.questionnaire_upd = async (req, res, next) => {
     if(!req.file) {
         return next(new errors.UsageError(`Missing multipart/form-data 'file' field`, 400));
@@ -47,7 +67,7 @@ exports.questionnaire_upd = async (req, res, next) => {
     try {
         questionnaire = JSON.parse(req.file.buffer.toString(`UTF8`));
     } catch(err) {
-        return next(new errors.UsageError(`Could not parse JSON, check syntax`, 400));
+        return next(new errors.UsageError(`JSON syntax error`, 400));
     }
 
     try {
@@ -200,6 +220,13 @@ exports.questionnaire_upd = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /admin/resetall
+    Supported Methods: POST
+
+    Resets the system database
+*/
 exports.resetall = async (req, res, next) => {
     let conn, resdata;
 
@@ -239,6 +266,13 @@ exports.resetall = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /admin/resetq/:questionnaireID
+    Supported Methods: POST
+
+    Clears all answers given to a questionnaire
+*/
 exports.resetq = async (req, res, next) => {
     if(!req.params.questionnaireID) {
         return next(new errors.UsageError(`Missing parameter: questionnaireID`, 400));
