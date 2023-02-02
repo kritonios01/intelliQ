@@ -4,6 +4,8 @@
 # API (Node.js) Files
 api-backend/node_modules/
 api-backend/package-lock.json
+
+# CLI Virtual Environment and setup Files #
 cli/virtenv/
 cli/virtenv2/
 cli/cli-tool/intelliQ_CLI_Tools.egg-info
