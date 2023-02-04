@@ -24,15 +24,6 @@ National Technical University of Athens
 	$ pm2 start app.js --name intelliQ-API
 	```
 
-#### Creating a self-signed SSL certificate
-
-```shell
-$ openssl genrsa -out key.pem
-$ openssl req -new -key key.pem -out csr.pem
-$ openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
-```
-
-
 ### CLI (Command Line Interface)
 1. Make sure you have python 3 installed (it can be downloaded from the [official website](https://www.python.org/) or you can use your favourite package manager)
 2. *Create a virtual environment in a directory of your choosing to install dependencies and activate it in your terminal:
@@ -46,10 +37,18 @@ $ openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
 	```
 4. Next time you want to use the CLI commands just activate the virtual environment using:
 	```shell
-	$ source <virtenvname>/bin/activate
+	$ source /.../<virtenvname>/bin/activate
 	```
 
-\*Note: if you skip this step dependencies will be installed globally
+\*Note: you may choose to skip this step, however dependencies will be installed globally
+
+#### Creating a self-signed SSL certificate
+
+```shell
+$ openssl genrsa -out key.pem
+$ openssl req -new -key key.pem -out csr.pem
+$ openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+```
 
 
 ## Project Team
