@@ -32,6 +32,26 @@ $ openssl req -new -key key.pem -out csr.pem
 $ openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
 ```
 
+
+### CLI (Command Line Interface)
+1. Make sure you have python 3 installed (it can be downloaded from the [official website](https://www.python.org/) or you can use your favourite package manager)
+2. *Create a virtual environment in a directory of your choosing to install dependencies and activate it in your terminal:
+	```shell
+	$ python3 -m venv <virtenvname>
+	$ source <virtenvname>/bin/activate
+	```
+3. Go to the [cli-tool](/cli/cli-tool/) directory and run:
+	```shell
+	$ pip install -e
+	```
+4. Next time you want to use the CLI commands just activate the virtual environment using:
+	```shell
+	$ source <virtenvname>/bin/activate
+	```
+
+\*Note: if you skip this step dependencies will be installed globally
+
+
 ## Project Team
 | Full Name           | Registration Number  |
 | ------------------- | -------------------- |
