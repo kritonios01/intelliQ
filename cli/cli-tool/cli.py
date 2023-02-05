@@ -1,4 +1,6 @@
-#softeng 2226
+#softeng 2226 CLI
+#Basic implementation of the intelliQ CLI with @click plugin. The basic grouped command is se2226 (see setup.py)
+#Here we define the main group and each (sub)command has been implemented below
 
 import click
 import requests as http
@@ -99,7 +101,7 @@ def questionnaire(questionnaire_id, format):
 				print(word, end=' ')
 			print('\nQuestions:')
 			for question in json_data['questions']:
-				print(f"{question['qID']}: {question['qtext']}")
+				print(f"({question['qID']}) {question['qtext']} [Required? {question['required']}, type: {question['type']}]")
 
 
 @main.command(short_help='Parameters: --questionnaire_id, --question_id')
@@ -121,7 +123,7 @@ def question(questionnaire_id, question_id, format):
 			print(f"Type: {json_data['type']}")
 			print('Options:')
 			for key in json_data['options']:
-				print(f"{key['opttxt']}")
+				print(f"({key['optID']}) {key['opttxt']} [Next question: {key['nextqID']}]")
 
 @main.command(short_help='Parameters: --questionnaire_id, --question_id, --session_id, --option_id')
 @click.option('--questionnaire_id', required=True)
@@ -130,15 +132,8 @@ def question(questionnaire_id, question_id, format):
 @click.option('--option_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def doanswer(questionnaire_id, question_id, session_id, option_id, format):
-	click.echo("Adds answer")
-
-@main.command(short_help='Parameters: --questionnaire_id, --session_id')
-@click.option('--questionnaire_id', required=True)
-@click.option('--session_id', required=True)
-@click.option('--format', required=True, type=click.Choice(['json','csv']))
-def getsessionanswers(questionnaire_id, session_id, format):
-	click.echo('Fetching Answers...')
-	response = http.get(f'/getquestionanswers/{questionnaire_id}/{session_id}')
+	click.echo('Registering answer...')
+	response = http.post(f'https://api.intelliq.site/intelliq_api/doanswer/{questionnaire_id}/{question_id}/{session_id}/{option_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -146,7 +141,25 @@ def getsessionanswers(questionnaire_id, session_id, format):
 			pass
 		else: 
 			json_data=response.json()
-			for key in json_data['asnwers']:
+			for key in json_data:
+				print(f'{key} --> {json_data[key]}')
+			
+
+@main.command(short_help='Parameters: --questionnaire_id, --session_id')
+@click.option('--questionnaire_id', required=True)
+@click.option('--session_id', required=True)
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def getsessionanswers(questionnaire_id, session_id, format):
+	click.echo('Fetching answers...')
+	response = http.get(f'https://api.intelliq.site/intelliq_api/getsessionanswers/{questionnaire_id}/{session_id}?format={format}')
+	if response.status_code != 200:
+		click.echo(f"Error retrieving data (Code: {response.status_code})")
+	else:
+		if(format=='csv'):
+			pass
+		else: 
+			json_data=response.json()
+			for key in json_data['answers']:
 				print(f'{key["qID"]}: {key["ans"]}')
 
 @main.command(short_help='Parameters: --questionnaire_id, --question_id')
@@ -154,8 +167,8 @@ def getsessionanswers(questionnaire_id, session_id, format):
 @click.option('--question_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def getquestionanswers(questionnaire_id, question_id, format):
-	click.echo('Fetching Answers...')
-	response = http.get(f'https://api.intelliq.site/intelliq_api/getquestionanswers/{questionnaire_id}/{question_id}')
+	click.echo('Fetching answers...')
+	response = http.get(f'https://api.intelliq.site/intelliq_api/getquestionanswers/{questionnaire_id}/{question_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -165,11 +178,5 @@ def getquestionanswers(questionnaire_id, question_id, format):
 				print(row)
 		else:
 			json_data=response.json()
-			for key in json_data['asnwers']:
+			for key in json_data['answers']:
 				print(key["ans"])
-			
-
-	'''with open('ex1.json', 'r') as source:
-		json_data = json.load(source)
-		for answer in json_data['answers']:
-			print(answer["ans"])'''
