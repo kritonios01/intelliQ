@@ -13,6 +13,8 @@ const app = express();
 app.use(express.json());
 app.use(router);
 
+app.set('query parser', 'simple');
+
 app.all(`*`, (req, res, next) => {
     next(new errors.UsageError(`Resource not found`, 404));
 });
