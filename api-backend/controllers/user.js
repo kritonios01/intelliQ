@@ -49,7 +49,7 @@ exports.questionnaire = async (req, res, next) => {
             } else {
                 res.status(200).json(resdata);
             }
-        } else res.status(402).send();
+        } else res.status(204).send();
 
         if(conn) conn.end();
     }
@@ -102,7 +102,7 @@ exports.question = async (req, res, next) => {
             } else {
                 res.status(200).json(resdata);
             }
-        } else res.status(402).send();
+        } else res.status(204).send();
 
         if(conn) conn.end();
     }
@@ -216,7 +216,7 @@ exports.getsessionanswers = async (req, res, next) => {
             } else {
                 res.status(200).json(resdata);
             }
-        } else res.status(402).send();
+        } else res.status(204).send();
 
         if(conn) conn.end();
     }
@@ -270,7 +270,7 @@ exports.getquestionanswers = async (req, res, next) => {
             } else {
                 res.status(200).json(resdata);
             }
-        } else res.status(402).send();
+        } else res.status(204).send();
 
         if(conn) conn.end();
     }
