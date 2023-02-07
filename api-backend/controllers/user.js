@@ -57,6 +57,44 @@ exports.questionnaire = async (req, res, next) => {
 
 /*
     Endpoint Implementation
+    Resource URL: /questionnaires
+    Supported Methods: GET
+
+    Returns the details of all questionnaires
+*/
+exports.questionnaires = async (req, res, next) => {
+    let conn, resdata;
+
+    try {
+        conn = await pool.getConnection();
+
+        let questionnaires;
+        if(req.query.keyword) {
+            if(Array.isArray(req.query.keyword)) questionnaires = (await conn.query(`SELECT DISTINCT q.questionnaireID, q.questionnaireTitle FROM questionnaires q INNER JOIN questionnaire_keywords qk ON q.questionnaireID = qk.questionnaireID INNER JOIN keywords k ON qk.keywordID = k.keywordID WHERE k.keywordText IN (?);`, [req.query.keyword]));
+            else questionnaires = (await conn.query(`SELECT q.questionnaireID, q.questionnaireTitle FROM questionnaires q INNER JOIN questionnaire_keywords qk ON q.questionnaireID = qk.questionnaireID INNER JOIN keywords k ON qk.keywordID = k.keywordID WHERE k.keywordText = ?;`, [req.query.keyword]));
+        } else questionnaires = (await conn.query(`SELECT * FROM questionnaires;`));
+
+        if(questionnaires) resdata = questionnaires;
+    } catch(err) {
+        return next(err);
+    } finally {
+        if(resdata) {
+            if(req.query.format == `csv`) {
+                const parser = new Parser(Object.keys(resdata));
+
+                res.type(`text/csv`);
+                res.send(parser.parse(resdata));
+            } else {
+                res.status(200).json(resdata);
+            }
+        } else res.status(204).send();
+
+        if(conn) conn.end();
+    }
+};
+
+/*
+    Endpoint Implementation
     Resource URL: /question/:questionnaireID/:questionID
     Supported Methods: GET
 
