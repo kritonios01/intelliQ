@@ -74,7 +74,7 @@ exports.questionnaires = async (req, res, next) => {
             else questionnaires = (await conn.query(`SELECT q.questionnaireID, q.questionnaireTitle FROM questionnaires q INNER JOIN questionnaire_keywords qk ON q.questionnaireID = qk.questionnaireID INNER JOIN keywords k ON qk.keywordID = k.keywordID WHERE k.keywordText = ?;`, [req.query.keyword]));
         } else questionnaires = (await conn.query(`SELECT * FROM questionnaires;`));
 
-        if(questionnaires) resdata = questionnaires;
+        if(questionnaires.length > 0) resdata = questionnaires;
     } catch(err) {
         return next(err);
     } finally {
@@ -230,7 +230,7 @@ exports.getsessionanswers = async (req, res, next) => {
 
         const answers = (await conn.query(`SELECT qID, ans FROM answers WHERE questionnaireID = ? AND session = ? ORDER BY qID ASC;`, [req.params.questionnaireID, req.params.session]));
 
-        if(answers) {
+        if(answers.length > 0) {
             resdata = {
                 questionnaireID: req.params.questionnaireID,
                 session: req.params.session,
@@ -284,7 +284,7 @@ exports.getquestionanswers = async (req, res, next) => {
 
         const answers = (await conn.query(`SELECT session, ans FROM answers WHERE questionnaireID = ? AND qID = ? ORDER BY session ASC;`, [req.params.questionnaireID, req.params.questionID]));
 
-        if(answers) {
+        if(answers.length > 0) {
             resdata = {
                 questionnaireID: req.params.questionnaireID,
                 questionID: req.params.questionID,
