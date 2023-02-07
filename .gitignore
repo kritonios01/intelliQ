@@ -5,8 +5,8 @@
 api-backend/node_modules/
 api-backend/package-lock.json
 
-# CLI Virtual Environment and setup Files #
+# CLI Files
 cli/virtenv/
 cli/virtenv2/
-cli/cli-tool/intelliQ_CLI_Tools.egg-info
-cli/cli-tool/__pycache__
+cli/intelliQ_CLI_Tools.egg-info
+cli/__pycache__
