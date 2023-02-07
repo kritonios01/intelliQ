@@ -208,6 +208,56 @@ exports.doanswer = async (req, res, next) => {
 
 /*
     Endpoint Implementation
+    Resource URL: /newsession/:questionnaireID
+    Supported Methods: POST
+
+    Create a new session for a specific questionnaire
+*/
+exports.newsession = async (req, res, next) => {
+    if(!req.params.questionnaireID) {
+        return next(new errors.UsageError(`Missing parameter: questionnaireID`, 400));
+    }
+
+    let conn, resdata;
+
+    try {
+        conn = await pool.getConnection();
+
+        const lastSession = (await conn.query(`SELECT session FROM sessions ORDER BY date DESC LIMIT 1;`))[0];
+        const nextSession = lastSession ? `S` + (parseInt(lastSession.session.substring(1)) + 1) : `S0`;
+
+        const affectedRows = (await conn.query(`INSERT INTO sessions (session, questionnaireID) VALUES (?, ?)`, [nextSession, req.params.questionnaireID])).affectedRows;
+
+        if(affectedRows == 1) {
+            resdata = {
+                status: "OK",
+                questionnaireID: req.params.questionnaireID,
+                session: nextSession
+            }
+        } else {
+            resdata = {
+                status: "failed",
+                reason: "unknown"
+            }
+        }
+    } catch(err) {
+        return next(err);
+    } finally {
+        if(req.query.format == `csv`) {
+            const parser = new Parser(Object.keys(resdata));
+
+            res.type(`text/csv`);
+            res.send(parser.parse(resdata));
+        } else {
+            res.status(200).json(resdata);
+        }
+
+        if(conn) conn.end();
+    }
+};
+
+/*
+    Endpoint Implementation
     Resource URL: /getsessionanswers/:questionnaireID/:session
     Supported Methods: GET
 

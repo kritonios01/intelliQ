@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS `intelliq`.`sessions`;
 CREATE TABLE IF NOT EXISTS `intelliq`.`sessions` (
   `session` VARCHAR(8) NOT NULL PRIMARY KEY,
   `questionnaireID` VARCHAR(8) NOT NULL,
+  `date` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   INDEX `fk_session_questionnaire_idx` (`questionnaireID` ASC),
   CONSTRAINT `fk_session_questionnaire`
     FOREIGN KEY (`questionnaireID`)

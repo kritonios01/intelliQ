@@ -62,6 +62,11 @@ router
     .all(methodNotAllowed);
 
 router
+    .route("/intelliq_api/newsession/:questionnaireID")
+    .post(controllers.user.newsession)
+    .all(methodNotAllowed);
+
+router
     .route("/intelliq_api/getsessionanswers/:questionnaireID/:session")
     .get(controllers.user.getsessionanswers)
     .all(methodNotAllowed);
