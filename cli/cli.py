@@ -180,3 +180,37 @@ def getquestionanswers(questionnaire_id, question_id, format):
 			json_data=response.json()
 			for key in json_data['answers']:
 				print(key["ans"])
+
+@main.command(short_help='Parameters: --keyword, --question_id')
+@click.option('--keyword', required=False, multiple=True)
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def questionnaires(keyword, format):
+	click.echo('Fetching questionnaires...')
+	response = http.get(f'https://api.intelliq.site/intelliq_api/questionnaires?format={format}' + (('&keyword=' + '&keyword='.join(keyword) if len(keyword) > 1 else '&keyword=' + keyword[0]) if len(keyword) > 0 else ''))
+	if response.status_code != 200:
+		click.echo(f"Error retrieving data (Code: {response.status_code})")
+	else:
+		if(format=='csv'):
+			csv_reader = csv.reader(response.text)
+			for row in csv_reader:
+				print(row)
+		else:
+			json_data=response.json()
+			for questionnaire in json_data:
+				print(f'{questionnaire["questionnaireID"]}: {questionnaire["questionnaireTitle"]}')
+
+@main.command(short_help='Parameters: --questionnaire_id')
+@click.option('--questionnaire_id', required=True)
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def newsession(questionnaire_id, format):
+	click.echo('Creating new session...')
+	response = http.post(f'https://api.intelliq.site/intelliq_api/newsession/{questionnaire_id}?format={format}')
+	if response.status_code != 200:
+		click.echo(f"Error retrieving data (Code: {response.status_code})")
+	else:
+		if(format=='csv'):
+			pass
+		else: 
+			json_data=response.json()
+			for key in json_data:
+				print(f'{key} --> {json_data[key]}')
