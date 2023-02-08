@@ -6,12 +6,19 @@ import click
 import requests as http
 import json
 import csv
+from io import StringIO
+from tabulate import tabulate
+import pandas as pd
 
 @click.group()
 def main():
 	'''This is the Command Line Interface for intelliQ \n
 	All commands require the --format parameter'''
 
+def csv_handling(response):
+	table = StringIO(response.text)
+	df = pd.read_csv(table, header = None)
+	print(tabulate(df, tablefmt="outline", showindex = False))
 
 
 @main.command(short_help='No parameters')
@@ -22,10 +29,8 @@ def healthcheck(format):
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
-		if(format=='csv'):             
-			csv_reader = csv.reader(response.text)
-			for row in csv_reader:
-				print(row)
+		if(format=='csv'):
+			csv_handling(response)
 		else:
 			json_data=response.json()
 			for key in json_data:
@@ -40,7 +45,7 @@ def resetall(format):
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			pass			
+			csv_handling(response)		
 		else:
 			json_data=response.json()
 			for key in json_data:
@@ -58,7 +63,7 @@ def questionnaire_upd(source, format):
 			click.echo(f"Error! (Code: {response.status_code})")
 		else:
 			if(format=='csv'):
-				pass
+				csv_handling(response)
 			else:
 				json_data=response.json()
 				for key in json_data:
@@ -76,7 +81,7 @@ def resetq(questionnaire_id, format):
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			pass			
+			csv_handling(response)			
 		else:
 			json_data=response.json()
 			for key in json_data:
@@ -92,7 +97,7 @@ def questionnaire(questionnaire_id, format):
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			pass
+			csv_handling(response)
 		else: 
 			json_data=response.json()
 			print(f"Title: {json_data['questionnaireTitle']}")
@@ -115,7 +120,7 @@ def question(questionnaire_id, question_id, format):
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			pass
+			csv_handling(response)
 		else: 
 			json_data=response.json()
 			print(f"Question Title: {json_data['qtext']}")
@@ -138,7 +143,7 @@ def doanswer(questionnaire_id, question_id, session_id, option_id, format):
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			pass
+			csv_handling(response)
 		else: 
 			json_data=response.json()
 			for key in json_data:
@@ -156,7 +161,7 @@ def getsessionanswers(questionnaire_id, session_id, format):
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			pass
+			csv_handling(response)
 		else: 
 			json_data=response.json()
 			for key in json_data['answers']:
@@ -173,9 +178,7 @@ def getquestionanswers(questionnaire_id, question_id, format):
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			csv_reader = csv.reader(response.text)
-			for row in csv_reader:
-				print(row)
+			csv_handling(response)
 		else:
 			json_data=response.json()
 			for key in json_data['answers']:
@@ -191,9 +194,7 @@ def questionnaires(keyword, format):
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			csv_reader = csv.reader(response.text)
-			for row in csv_reader:
-				print(row)
+			csv_handling(response)
 		else:
 			json_data=response.json()
 			for questionnaire in json_data:
@@ -209,7 +210,7 @@ def newsession(questionnaire_id, format):
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
 		if(format=='csv'):
-			pass
+			csv_handling(response)
 		else: 
 			json_data=response.json()
 			for key in json_data:
