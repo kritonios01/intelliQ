@@ -1,0 +1,36 @@
+version: '3'
+services:
+  # Frontend Container
+  frontend:
+    build: ./frontend
+    ports:
+      - '8080:80'
+    container_name: frontend-docker
+    restart: always
+    links:
+      - api-backend
+    depends_on:
+      - api-backend
+  # API Backend Container
+  api-backend:
+    build: ./api-backend
+    ports:
+      - '9102:9102'
+    container_name: api-backend-docker
+    restart: always
+    links:
+      - database
+    depends_on:
+      - database
+  # Database Container
+  database:
+    image: mariadb
+    ports:
+      - '3306:3306'
+    container_name: database-docker
+    restart: always
+    volumes:
+      - 'scripts/mariadb/schema.sql:/docker-entrypoint-initdb.d/init.sql'
+    environment:
+      MARIADB_USER: intelliq
+      MARIADB_PASSWORD: ''
