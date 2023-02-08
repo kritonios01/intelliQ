@@ -5,6 +5,7 @@ services:
     build: ./frontend
     ports:
       - '80:80'
+      - '443:443'
     container_name: intelliq-frontend
     restart: always
     depends_on:
