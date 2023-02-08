@@ -26,7 +26,7 @@ h1{
 }
 
 .mynav{
-  background-color: #3F72AF;
+  background-color: #7FC37E;
 }
 
 .navfont{
@@ -35,10 +35,10 @@ h1{
 }
 
 .homebutton{
-  background-color: #3F72AF;
-  border-color: #3F72AF;
+  background-color: #7FC37E;
+  border-color: #7FC37E;
 }
 .homebutton:hover{
-  background-color: #487ec0;
-  border-color: #487ec0;
+  background-color: #b2e6b1;
+  border-color: #b2e6b1;
 }
