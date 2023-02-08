@@ -6,8 +6,19 @@ WORKDIR /usr/src/intelliq-api
 
 COPY . .
 
-RUN npm install pm2 -g
-RUN npm install express mariadb multer
+# Use special app configuration for Docker container
+RUN mv -f config-docker.js config.js
 
-EXPOSE 9102
-CMD [ "pm2", "start", "app.js", "--name", "intelliQ-API" ]
+# Install dependencies
+RUN npm install express mariadb multer json2csv
+
+# Generate self-signed SSL certificate
+RUN mkdir ssl
+
+RUN openssl genrsa -out ssl/key.pem
+RUN openssl req -new -batch -key ssl/key.pem -out ssl/csr.pem
+RUN openssl x509 -req -days 9999 -in ssl/csr.pem -signkey ssl/key.pem -out ssl/cert.pem
+
+EXPOSE 9103
+
+CMD [ "node", "app.js" ]
