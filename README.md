@@ -32,7 +32,7 @@ National Technical University of Athens
 	$ python3 -m venv <virtenvname>
 	$ source <virtenvname>/bin/activate
 	```
-3. Go to the [cli-tool](/cli/cli-tool/) directory and run:
+3. Go to the [cli](/cli) directory and run:
 	```shell
 	$ pip install -e .
 	```
