@@ -215,3 +215,18 @@ def newsession(questionnaire_id, format):
 			json_data=response.json()
 			for key in json_data:
 				print(f'{key} --> {json_data[key]}')
+
+@main.command(short_help='No parameters')
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def keywords(format):
+    click.echo('Fetching keywords...')
+    response = http.post(f'https://api.intelliq.site/intelliq_api/keywords?format={format}')
+    if response.status_code != 200:
+        click.echo(f"Error retrieving data (Code: {response.status_code})")
+    else:
+        if(format=='csv'):
+            csv_handling(response)
+        else: 
+            json_data=response.json()
+            for keyword in json_data:
+                print(f'{keyword["keywordID"]}: {keyword["keywordText"]}')
