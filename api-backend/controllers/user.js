@@ -95,6 +95,41 @@ exports.questionnaires = async (req, res, next) => {
 
 /*
     Endpoint Implementation
+    Resource URL: /keywords
+    Supported Methods: GET
+
+    Returns the details of all keywords
+*/
+exports.keywords = async (req, res, next) => {
+    let conn, resdata;
+
+    try {
+        conn = await pool.getConnection();
+
+        const keywords = (await conn.query(`SELECT * FROM keywords;`));
+
+        if(keywords.length > 0) resdata = keywords;
+    } catch(err) {
+        return next(err);
+    } finally {
+        if(resdata) {
+            if(req.query.format == `csv`) {
+                const parser = new Parser(Object.keys(resdata));
+
+                res.type(`text/csv`);
+                res.send(parser.parse(resdata));
+            } else {
+                res.status(200).json(resdata);
+            }
+        } else res.status(204).send();
+
+        if(conn) conn.end();
+    }
+};
+
+
+/*
+    Endpoint Implementation
     Resource URL: /question/:questionnaireID/:questionID
     Supported Methods: GET
 
