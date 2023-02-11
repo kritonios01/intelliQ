@@ -23,7 +23,8 @@ const config = {
     },
 
     cors: {
-        origin: "^(http:\/\/|https:\/\/)?(intelliq.site|localhost)\/?$"
+        origin: "^(http:\/\/|https:\/\/)?(intelliq.site|localhost)\/?$",
+        optionsSuccessStatus: 200
     },
 
     mariadb: {

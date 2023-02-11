@@ -23,7 +23,8 @@ const config = {
     },
 
     cors: {
-        origin: "^(http:\/\/|https:\/\/)?localhost\/?$"
+        origin: true,
+        optionsSuccessStatus: 200
     },
 
     mariadb: {
