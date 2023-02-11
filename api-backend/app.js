@@ -11,9 +11,10 @@ const errorHandler = require(`./utils/errorHandler`);
 
 const app = express();
 
-app.use(router);
-app.use(express.json());
 app.use(cors(config.cors));
+app.use(router);
+
+app.use(express.json());
 
 app.set('query parser', 'simple');
 
