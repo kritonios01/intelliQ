@@ -22,6 +22,10 @@ const config = {
         }
     },
 
+    cors: {
+        origin: "^(http:\/\/|https:\/\/)?localhost\/?$"
+    },
+
     mariadb: {
         host: "intelliq-database",
         port: 3306,

@@ -1,5 +1,6 @@
 const express = require(`express`);
 const https = require(`https`);
+const cors = require(`cors`);
 const fs = require(`fs`);
 
 const router = require(`./routes`);
@@ -10,8 +11,9 @@ const errorHandler = require(`./utils/errorHandler`);
 
 const app = express();
 
-app.use(express.json());
 app.use(router);
+app.use(express.json());
+app.use(cors(config.cors));
 
 app.set('query parser', 'simple');
 
