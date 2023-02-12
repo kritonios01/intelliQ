@@ -5,6 +5,8 @@ School of Electrical and Computer Engineering
 National Technical University of Athens
 
 ## Build Instructions
+If you have **Docker** installed, simply clone and run `docker compose up`.  
+Otherwise you may find manual instructions for each component below.
 
 ### API Backend Application
 1. Download and install [Node.js](https://nodejs.org/).
@@ -15,7 +17,7 @@ National Technical University of Athens
 3. Install required modules:
 	```shell
 	$ cd api-backend
-	$ npm install express mariadb multer https json2csv
+	$ npm install express mariadb multer https json2csv cors
 	```
 4. Open [config.js](api-backend/config.js) and configure the application.
 	- In order to use the HTTPS server, an SSL certificate is required. You may find instructions on how to create one yourself [below](#creating-a-self-signed-ssl-certificate).
@@ -24,27 +26,40 @@ National Technical University of Athens
 	$ pm2 start app.js --name intelliQ-API
 	```
 
-### CLI (Command Line Interface)
-#### For UNIX systems
-1. Make sure you have python 3 installed (it can be downloaded from the [official website](https://www.python.org/) or you can use your favourite package manager)
-2. \*Create a virtual environment in a directory of your choosing to install dependencies and activate it in your terminal:
+### Command Line Interface
+#### UNIX systems
+Prerequisites: [python3](https://www.python.org/), python3-venv
+
+1. Create a virtual environment in the directory of your choosing and activate it in your shell:
 	```shell
-	$ python3 -m venv <virtenvname>
-	$ source <virtenvname>/bin/activate
+	$ python3 -m venv <venv_name>
+	$ source <venv_name>/bin/activate
 	```
-3. Go to the [cli](/cli) directory and run:
+2. Change to the [cli](/cli) directory and install dependencies:
 	```shell
+	$ cd cli
 	$ pip install -e .
 	```
-4. Next time you want to use the CLI commands just activate the virtual environment using:
+3. Every time you wish to use the CLI, just activate the virtual environment you created:
 	```shell
-	$ source /.../<virtenvname>/bin/activate
+	$ source <venv_name>/bin/activate
 	```
 
-\*Note: you may choose to skip this step, however dependencies will be installed globally
+You may choose not to use a virtual environment, however dependencies will be installed globally that way.
 
+The CLI tools are accessible through the `se2226` alias in the virtual environment.
 
-#### Creating a self-signed SSL certificate
+### Database
+This implementation of the intelliQ specification is compatible with MariaDB.
+The installation and configuration process for MariaDB differs depending on the operating system.  
+Please refer to the [official documentation](https://mariadb.com/kb/en/getting-installing-and-upgrading-mariadb/) for instructions.
+
+Make sure to initialise the database using [schema.sql](scripts/mariadb/schema.sql):
+```shell
+$ mysql -u <user> [-p] < scripts/mariadb/schema.sql
+```
+
+## Creating a self-signed SSL certificate
 
 ```shell
 $ openssl genrsa -out key.pem

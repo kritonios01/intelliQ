@@ -52,6 +52,11 @@ router
     .all(methodNotAllowed);
 
 router
+    .route("/intelliq_api/keywords")
+    .get(controllers.user.keywords)
+    .all(methodNotAllowed);
+
+router
     .route("/intelliq_api/question/:questionnaireID/:questionID")
     .get(controllers.user.question)
     .all(methodNotAllowed);

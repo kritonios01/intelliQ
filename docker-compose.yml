@@ -5,6 +5,7 @@ services:
     build: ./frontend
     ports:
       - '80:80'
+      - '443:443'
     container_name: intelliq-frontend
     restart: always
     depends_on:
@@ -25,7 +26,7 @@ services:
       interval: 1s
       timeout: 5s
       retries: 3
-      start_period: 1s
+      start_period: 15s
   # Database Container
   database:
     image: mariadb
@@ -47,4 +48,4 @@ services:
       interval: 1s
       timeout: 5s
       retries: 3
-      start_period: 1s
+      start_period: 15s
