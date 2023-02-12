@@ -4,22 +4,23 @@
 
 import click
 import requests as http
-import json
-import csv
 from io import StringIO
 from tabulate import tabulate
 import pandas as pd
 
-@click.group()
-def main():
-	'''This is the Command Line Interface for intelliQ \n
-	All commands require the --format parameter'''
 
+#helper function
 def csv_handling(response):
 	table = StringIO(response.text)
 	df = pd.read_csv(table, header = None)
 	print(tabulate(df, tablefmt="outline", showindex = False))
 
+
+
+@click.group()
+def main():
+	'''This is the Command Line Interface for intelliQ \n
+	All commands require the --format parameter'''
 
 @main.command(short_help='No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))

@@ -10,3 +10,4 @@ cli/virtenv/
 cli/virtenv2/
 cli/intelliQ_CLI_Tools.egg-info
 cli/__pycache__
+cli/examples
