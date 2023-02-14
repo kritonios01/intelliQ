@@ -46,12 +46,18 @@ h1{
   background-color: #94c993;
   border-color: #94c993;
 }
+.homebutton:disabled{
+  background-color: #94ac94;
+  border-color: #94ac94;
+}
 
 
 .centered{
   margin: auto;
-  width: 50%;
+  width: 100%;
   padding: 10px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 

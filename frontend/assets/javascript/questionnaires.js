@@ -1,15 +1,16 @@
- const questionnnaireURL="https://api.intelliq.site/intelliq_api/questionnaires";
- const dataConst = document.querySelector("#questn");
+const questionnnaireURL="https://api.intelliq.site/intelliq_api/questionnaires";
+const dataConst = document.querySelector("#questn");
 
- fetcher();
+fetcher();
  
- function fetcher(){
+function fetcher(){
     fetch(questionnnaireURL)
     .then( res  => res.json())
     .then( data => toHTML(data))
- }
+    .then (enableBtn)
+}
  
- function toHTML(data){
+function toHTML(data){
     data.forEach( (qsn) =>{
         dataConst.innerHTML +=`
         <tr>
@@ -19,7 +20,15 @@
         <tr>
         `
     })
- }
+
+}
+function enableBtn(){
+    const qopt = document.querySelectorAll('input[type=radio][name="questionnaireID"]');
+    qopt.forEach(radio=> radio.addEventListener('change',() => {
+        document.getElementById('sbt').removeAttribute("disabled");
+        console.log("enabled button");
+    }));
+}
 let selectedID;
 const myform = document.getElementById('form');
 myform.addEventListener('submit', function(e){
@@ -33,5 +42,5 @@ myform.addEventListener('submit', function(e){
     const sessionURL=`https://api.intelliq.site/intelliq_api/newsession/${selectedID}`
     fetch(sessionURL, {method: 'POST'})
     .then(res => res.json())
-    .then(data =>console.log(data))
+    .then(data =>document.location.href=`./question.html?questionnaireID=${selectedID}&session=${data.session}`)
 });
