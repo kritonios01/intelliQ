@@ -23,7 +23,7 @@ def main():
 	All commands require the --format parameter'''
 
 
-@main.command(short_help='No parameters')
+@main.command(short_help='Checks end-to-end connectivity between user and database         No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def healthcheck(format):
 	'''Checks end-to-end connectivity between user and database'''
@@ -41,7 +41,7 @@ def healthcheck(format):
 				print(f'{key} --> {json_data[key]}')
 
 
-@main.command(short_help='No parameters')
+@main.command(short_help='Deletes all data (questionnaires, sessions and answers) from database                                                    No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def resetall(format):
 	'''Deletes all data (questionnaires, sessions and answers) from database'''
@@ -59,7 +59,7 @@ def resetall(format):
 				print(f'{key} --> {json_data[key]}')
 
 
-@main.command(short_help='Parameters: --source')
+@main.command(short_help='Uploads the questionnaire located in source (json file) to the database                                        Parameters: --source')
 @click.option('--source', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaire_upd(source, format):
@@ -82,7 +82,7 @@ def questionnaire_upd(source, format):
 		click.echo('File Not Found!')
 
 
-@main.command(short_help='Parameters: --questionnaire_id')
+@main.command(short_help='Deletes the selected questionnaire from the database        Parameters: --questionnaire_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def resetq(questionnaire_id, format):
@@ -101,7 +101,7 @@ def resetq(questionnaire_id, format):
 				print(f'{key} --> {json_data[key]}')
 
 
-@main.command(short_help='Parameters: --questionnaire_id')
+@main.command(short_help='Returns the selected questionnaire             Parameters: --questionnaire_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaire(questionnaire_id, format):
@@ -125,7 +125,7 @@ def questionnaire(questionnaire_id, format):
 				print(f"({question['qID']}) {question['qtext']} [Required? {question['required']}, type: {question['type']}]")
 
 
-@main.command(short_help='Parameters: --questionnaire_id, --question_id')
+@main.command(short_help='Returns the selected question                          Parameters: --questionnaire_id, --question_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--question_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
@@ -149,7 +149,7 @@ def question(questionnaire_id, question_id, format):
 				print(f"({key['optID']}) {key['opttxt']} [Next question: {key['nextqID']}]")
 
 
-@main.command(short_help='Parameters: --questionnaire_id, --question_id, --session_id, --option_id')
+@main.command(short_help='Uploads the answer given to the selected question in a given session                                        Parameters: --questionnaire_id, --question_id, --session_id, --option_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--question_id', required=True)
 @click.option('--session_id', required=True)
@@ -171,7 +171,7 @@ def doanswer(questionnaire_id, question_id, session_id, option_id, format):
 				print(f'{key} --> {json_data[key]}')
 
 
-@main.command(short_help='Parameters: --questionnaire_id, --session_id')
+@main.command(short_help='Returns the answers to the selected questionnaire in a given session                                      Parameters: --questionnaire_id, --session_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--session_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
@@ -191,7 +191,7 @@ def getsessionanswers(questionnaire_id, session_id, format):
 				print(f'{key["qID"]}: {key["ans"]}')
 
 
-@main.command(short_help='Parameters: --questionnaire_id, --question_id')
+@main.command(short_help='Returns the answers to the selected question      Parameters: --questionnaire_id, --question_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--question_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
@@ -211,7 +211,7 @@ def getquestionanswers(questionnaire_id, question_id, format):
 				print(key["ans"])
 
 
-@main.command(short_help='Parameters: --keyword, --question_id')
+@main.command(short_help='Returns all the questionnaires related to the given keyword                                             Parameters: --keyword, --question_id')
 @click.option('--keyword', required=False, multiple=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaires(keyword, format):
@@ -230,7 +230,7 @@ def questionnaires(keyword, format):
 				print(f'{questionnaire["questionnaireID"]}: {questionnaire["questionnaireTitle"]}')
 
 
-@main.command(short_help='Parameters: --questionnaire_id')
+@main.command(short_help='Creates a new session for the selected questionnaire    Parameters: --questionnaire_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def newsession(questionnaire_id, format):
@@ -249,7 +249,7 @@ def newsession(questionnaire_id, format):
 				print(f'{key} --> {json_data[key]}')
 
 
-@main.command(short_help='No parameters')
+@main.command(short_help='Returns all available questionnaire keywords             No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def keywords(format):
 	'''Returns all available questionnaire keywords'''
