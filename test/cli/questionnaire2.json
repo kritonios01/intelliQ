@@ -1,0 +1,235 @@
+{
+	"questionnaireID": "QQ002",
+	"questionnaireTitle": "Έρευνα για τα ταξίδια", 
+	"keywords": [
+    		"leisure",
+    		"travel"
+	],
+	"questions": [
+	{
+		"qID": "P00",
+		"qtext": "Ποια είναι η ηλικία σας;", 
+		"required": "TRUE",
+		"type": "profile",
+		"options": [
+			{
+				"optID": "P00A1", 
+				"opttxt": "<25", 
+				"nextqID": "P01"
+			},
+			{
+				"optID": "P00A2", 
+				"opttxt": "25-40", 
+				"nextqID": "P01"
+			},
+			{
+				"optID": "P00A3", 
+				"opttxt": "40-65", 
+				"nextqID": "P01"
+			},
+			{
+				"optID": "P00A4", 
+				"opttxt": ">65", 
+				"nextqID": "P01"
+			} 
+		]
+		},
+		{
+			"qID": "P01",
+			"qtext": "Ποια είναι η εργασιακή σας κατάσταση;", 
+			"required": "TRUE",
+			"type": "profile",
+			"options": [
+				{
+					"optID": "P01A1", 
+					"opttxt": "Εργαζόμενος", 
+					"nextqID": "Q00"
+				},
+				{
+					"optID": "P01A2", 
+					"opttxt": "Άνεργος", 
+					"nextqID": "Q00"
+				},
+				{
+					"optID": "P01A3", 
+					"opttxt": "Άλλο (φοιτητής, συνταξιούχος)", 
+					"nextqID": "Q00"
+				}
+			]
+		},
+		{
+			"qID": "Q00",
+			"qtext": "Ταξιδεύετε συχνά;", 
+			"required": "TRUE",
+			"type": "question",
+			"options": [
+				{
+					"optID": "Q00A1", 
+					"opttxt": "Ναι",
+					"nextqID": "Q01" 
+				},
+				{
+					"optID": "Q00A2", 
+					"opttxt": "Όχι, δεν μου αρέσει ιδιαίτερα να ταξιδεύω", 
+					"nextqID": "Q03"
+				},
+				{
+					"optID": "Q00A2", 
+					"opttxt": "Όχι, αν και θα ήθελα να ταξιδεύω περισσότερο", 
+					"nextqID": "Q04"
+				}
+			]
+		},
+		{
+			"qID": "Q01",
+			"qtext": "Ποιοι είναι οι κύριοι λόγοι που ταξιδεύετε;", 
+			"required": "TRUE",
+			"type": "question",
+			"options": [
+				{
+					"optID": "Q01A1", 
+					"opttxt": "Για αναψυχή",
+					"nextqID": "Q02" 
+				},
+				{
+					"optID": "Q01A2", 
+					"opttxt": "Για εργασία", 
+					"nextqID": "Q02"
+				},
+				{
+					"optID": "Q01A2", 
+					"opttxt": "<open string>", 
+					"nextqID": "Q02"
+				}
+			]
+		},
+		{
+			"qID": "Q02",
+			"qtext": "Τι σας αρέσει περισσότερο στα ταξίδια;", 
+			"required": "TRUE",
+			"type": "question",
+			"options": [
+				{
+					"optID": "Q02A1", 
+					"opttxt": "Είναι χαλαρωτικά", 
+					"nextqID": "Q05"
+				},
+				{
+					"optID": "Q02A2", 
+					"opttxt": "Η αίσθηση της περιπέτειας", 
+					"nextqID": "Q05"
+				},
+				{
+					"optID": "Q02A3", 
+					"opttxt": "Η επαφή με διαφορετικές κουλτούρες", 
+					"nextqID": "Q05"
+				},
+				{
+					"optID": "Q02A4", 
+					"opttxt": "Το φαγητό", 
+					"nextqID": "Q05"
+				},
+				{
+					"optID": "Q02A5", 
+					"opttxt": "<open string>", 
+					"nextqID": "Q05"
+				}
+			]
+		},
+		{
+			"qID": "Q03",
+			"qtext": "Γιατί δεν σας αρέσουν;", 
+			"required": "TRUE", 
+			"type": "question", 
+			"options": [
+				{
+					"optID": "Q03A1", 
+					"opttxt": "Το κόστος είναι υψηλό σε σχέση με αυτό που προσφέρουν", 
+					"nextqID": "-"
+				},
+				{
+					"optID": "Q03A2", 
+					"opttxt": "Τα θεωρώ κουραστικά", 
+					"nextqID": "-"
+				},
+				{
+					"optID": "Q03A3", 
+					"opttxt": "Δεν είναι ασφαλή", 
+					"nextqID": "-"
+				},
+				{
+					"optID": "Q03A4", 
+					"opttxt": "<open string>", 
+					"nextqID": "-"
+				}
+			]
+		},
+		{
+			"qID": "Q04",
+			"qtext": "Γιατί δεν μπορείτε να ταξιδέψετε όσο θα θέλατε;", 
+			"required": "TRUE",
+			"type": "question",
+			"options": [
+				{
+					"optID": "Q04A1", 
+					"opttxt": "Για οικονομικούς λόγους", 
+					"nextqID": "Q05"
+				},
+				{
+					"optID": "Q04A2", 
+					"opttxt": "Δεν διαθέτω αρκετό ελεύθερο χρόνο", 
+					"nextqID": "Q05"
+				},
+				{
+					"optID": "Q04A3", 
+					"opttxt": "<open string>", 
+					"nextqID": "Q05"
+				}
+			]
+		},
+		{
+			"qID": "Q05",
+			"qtext": "Προτιμάτε ως προορισμό την Ελλάδα ή το εξωτερικό;", 
+			"required": "TRUE", 
+			"type": "question",
+			"options": [
+				{
+					"optID": "Q05A1", 
+					"opttxt": "Ελλάδα", 
+					"nextqID": "Q06"
+				},
+				{
+					"optID": "Q05A2", 
+					"opttxt": "εξωτερικό", 
+					"nextqID": "Q07"
+				}
+			]
+		},
+		{
+			"qID": "Q06",
+			"qtext": "Γιατί προτιμάτε την Ελλάδα;", 
+			"required": "TRUE",
+			"type": "question", 
+			"options": [
+				{
+					"optID": "Q06A1", 
+					"opttxt": "<open string>", 
+					"nextqID": "-"
+				}
+			]
+		},
+		{
+			"qID": "Q07",
+			"qtext": "Γιατί προτιμάτε το εξωτερικό;", 
+			"required": "TRUE",
+			"type": "question", 
+			"options": [
+				{
+					"optID": "Q07A1", 
+					"opttxt": "<open string>", 
+					"nextqID": "-"
+				}
+			]
+		} 	
+	]
+}

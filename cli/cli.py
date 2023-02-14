@@ -4,28 +4,32 @@
 
 import click
 import requests as http
-import json
-import csv
 from io import StringIO
 from tabulate import tabulate
 import pandas as pd
 
-@click.group()
-def main():
-	'''This is the Command Line Interface for intelliQ \n
-	All commands require the --format parameter'''
+base_url = 'https://api.intelliq.site/intelliq_api'
 
+#helper function
 def csv_handling(response):
 	table = StringIO(response.text)
 	df = pd.read_csv(table, header = None)
 	print(tabulate(df, tablefmt="outline", showindex = False))
 
 
+@click.group()
+def main():
+	'''This is the Command Line Interface for intelliQ \n
+	All commands require the --format parameter'''
+
+
 @main.command(short_help='No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def healthcheck(format):
+	'''Checks end-to-end connectivity between user and database'''
+
 	click.echo('Checking connection with Database...')
-	response=http.get(f'https://api.intelliq.site/intelliq_api/admin/healthcheck?format={format}')
+	response=http.get(f'{base_url}/admin/healthcheck?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -36,11 +40,14 @@ def healthcheck(format):
 			for key in json_data:
 				print(f'{key} --> {json_data[key]}')
 
+
 @main.command(short_help='No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def resetall(format):
+	'''Deletes all data (questionnaires, sessions and answers) from database'''
+
 	click.echo('Resetting all...')
-	response=http.post(f'https://api.intelliq.site/intelliq_api/admin/resetall?format={format}')
+	response=http.post(f'{base_url}/admin/resetall?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
@@ -51,14 +58,17 @@ def resetall(format):
 			for key in json_data:
 				print(f'{key} --> {json_data[key]}')
 
+
 @main.command(short_help='Parameters: --source')
 @click.option('--source', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaire_upd(source, format):
+	'''Uploads the questionnaire located in source (json file) to the database'''
+	
 	try:
 		file = {'file': ('file.json', open(source,'r'), 'application/json', {})}
 		click.echo('Uploading Questionnaire...')
-		response = http.post(f'https://api.intelliq.site/intelliq_api/admin/questionnaire_upd?format={format}', files=file)
+		response = http.post(f'{base_url}/admin/questionnaire_upd?format={format}', files=file)
 		if response.status_code != 200:
 			click.echo(f"Error! (Code: {response.status_code})")
 		else:
@@ -71,12 +81,15 @@ def questionnaire_upd(source, format):
 	except IOError:
 		click.echo('File Not Found!')
 
+
 @main.command(short_help='Parameters: --questionnaire_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def resetq(questionnaire_id, format):
+	'''Deletes the selected questionnaire from the database'''
+
 	click.echo('Resetting answers...')
-	response=http.post(f'https://api.intelliq.site/intelliq_api/admin/resetq/{questionnaire_id}?format={format}')
+	response=http.post(f'{base_url}/admin/resetq/{questionnaire_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
@@ -87,12 +100,15 @@ def resetq(questionnaire_id, format):
 			for key in json_data:
 				print(f'{key} --> {json_data[key]}')
 
+
 @main.command(short_help='Parameters: --questionnaire_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaire(questionnaire_id, format):
+	'''Returns the selected questionnaire'''
+
 	click.echo('Fetching data about the questionnaire...')
-	response = http.get(f'https://api.intelliq.site/intelliq_api/questionnaire/{questionnaire_id}?format={format}')
+	response = http.get(f'{base_url}/questionnaire/{questionnaire_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -114,8 +130,10 @@ def questionnaire(questionnaire_id, format):
 @click.option('--question_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def question(questionnaire_id, question_id, format):
+	'''Returns the selected question'''
+
 	click.echo('Fetching data about the question...')
-	response = http.get(f'https://api.intelliq.site/intelliq_api/question/{questionnaire_id}/{question_id}?format={format}')
+	response = http.get(f'{base_url}/question/{questionnaire_id}/{question_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -130,6 +148,7 @@ def question(questionnaire_id, question_id, format):
 			for key in json_data['options']:
 				print(f"({key['optID']}) {key['opttxt']} [Next question: {key['nextqID']}]")
 
+
 @main.command(short_help='Parameters: --questionnaire_id, --question_id, --session_id, --option_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--question_id', required=True)
@@ -137,8 +156,10 @@ def question(questionnaire_id, question_id, format):
 @click.option('--option_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def doanswer(questionnaire_id, question_id, session_id, option_id, format):
+	'''Uploads the answer given to the selected question in a given session'''
+
 	click.echo('Registering answer...')
-	response = http.post(f'https://api.intelliq.site/intelliq_api/doanswer/{questionnaire_id}/{question_id}/{session_id}/{option_id}?format={format}')
+	response = http.post(f'{base_url}/doanswer/{questionnaire_id}/{question_id}/{session_id}/{option_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -148,15 +169,17 @@ def doanswer(questionnaire_id, question_id, session_id, option_id, format):
 			json_data=response.json()
 			for key in json_data:
 				print(f'{key} --> {json_data[key]}')
-			
+
 
 @main.command(short_help='Parameters: --questionnaire_id, --session_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--session_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def getsessionanswers(questionnaire_id, session_id, format):
+	'''Returns the answers to the selected questionnaire in a given session'''
+
 	click.echo('Fetching answers...')
-	response = http.get(f'https://api.intelliq.site/intelliq_api/getsessionanswers/{questionnaire_id}/{session_id}?format={format}')
+	response = http.get(f'{base_url}/getsessionanswers/{questionnaire_id}/{session_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -167,13 +190,16 @@ def getsessionanswers(questionnaire_id, session_id, format):
 			for key in json_data['answers']:
 				print(f'{key["qID"]}: {key["ans"]}')
 
+
 @main.command(short_help='Parameters: --questionnaire_id, --question_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--question_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def getquestionanswers(questionnaire_id, question_id, format):
+	'''Returns the answers to the selected question'''
+
 	click.echo('Fetching answers...')
-	response = http.get(f'https://api.intelliq.site/intelliq_api/getquestionanswers/{questionnaire_id}/{question_id}?format={format}')
+	response = http.get(f'{base_url}/getquestionanswers/{questionnaire_id}/{question_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -184,12 +210,15 @@ def getquestionanswers(questionnaire_id, question_id, format):
 			for key in json_data['answers']:
 				print(key["ans"])
 
+
 @main.command(short_help='Parameters: --keyword, --question_id')
 @click.option('--keyword', required=False, multiple=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def questionnaires(keyword, format):
+	'''Returns all the questionnaires related to the given keyword'''
+
 	click.echo('Fetching questionnaires...')
-	response = http.get(f'https://api.intelliq.site/intelliq_api/questionnaires?format={format}' + (('&keyword=' + '&keyword='.join(keyword) if len(keyword) > 1 else '&keyword=' + keyword[0]) if len(keyword) > 0 else ''))
+	response = http.get(f'{base_url}/questionnaires?format={format}' + (('&keyword=' + '&keyword='.join(keyword) if len(keyword) > 1 else '&keyword=' + keyword[0]) if len(keyword) > 0 else ''))
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -200,12 +229,15 @@ def questionnaires(keyword, format):
 			for questionnaire in json_data:
 				print(f'{questionnaire["questionnaireID"]}: {questionnaire["questionnaireTitle"]}')
 
+
 @main.command(short_help='Parameters: --questionnaire_id')
 @click.option('--questionnaire_id', required=True)
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def newsession(questionnaire_id, format):
+	'''Creates a new session for the selected questionnaire'''
+
 	click.echo('Creating new session...')
-	response = http.post(f'https://api.intelliq.site/intelliq_api/newsession/{questionnaire_id}?format={format}')
+	response = http.post(f'{base_url}/newsession/{questionnaire_id}?format={format}')
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -216,17 +248,20 @@ def newsession(questionnaire_id, format):
 			for key in json_data:
 				print(f'{key} --> {json_data[key]}')
 
+
 @main.command(short_help='No parameters')
 @click.option('--format', required=True, type=click.Choice(['json','csv']))
 def keywords(format):
-    click.echo('Fetching keywords...')
-    response = http.post(f'https://api.intelliq.site/intelliq_api/keywords?format={format}')
-    if response.status_code != 200:
-        click.echo(f"Error retrieving data (Code: {response.status_code})")
-    else:
-        if(format=='csv'):
-            csv_handling(response)
-        else: 
-            json_data=response.json()
-            for keyword in json_data:
-                print(f'{keyword["keywordID"]}: {keyword["keywordText"]}')
+	'''Returns all available questionnaire keywords'''
+
+	click.echo('Fetching keywords...')
+	response = http.get(f'{base_url}/keywords?format={format}')
+	if response.status_code != 200:
+		click.echo(f"Error retrieving data (Code: {response.status_code})")
+	else:
+		if(format=='csv'):
+			csv_handling(response)
+		else:
+			json_data=response.json()
+			for keyword in json_data:
+				print(f'{keyword["keywordID"]}: {keyword["keywordText"]}')
