@@ -20,26 +20,14 @@
         </div>
         </div>
     </nav>
-    <h3 class="display-5 homepar">Please select a Questionnaire from the list!</h3>
-    <form id="form">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Select</th>
-          <th scope="col">Questionnaire ID</th>
-          <th scope="col">Questionnaire Title</th>
-        </tr>
-      </thead>
-      
-      <tbody id="questn">
-
-      </tbody>
-    </table>
     <div class="centered">
-    <button id="sbt" type="sumbit" disabled class="btn btn-primary homebutton">Go!</button>
+        <div id="questionnaire">
+            <h3 style="text-align: center;" id="question">Question Goes Here</h3>
+        </div>
+        <div class="option-container">
+            <form id="optionForm"></form>
+        </div>
     </div>
-    </form>
-    <script type="module" src="./assets/javascript/questionnaires.js"></script>
-    <script src="./assets/bootjs/bootstrap.bundle.min.js"></script>
+    <script type="module" src="./assets/javascript/question.js"></script>
 </body>
 </html>
