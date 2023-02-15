@@ -1,6 +1,10 @@
 const questionnnaireURL="https://api.intelliq.site/intelliq_api/questionnaires";
 const dataConst = document.querySelector("#questn");
 
+//--- Add loader
+const loader = document.querySelector(".loader");
+const loaded = document.querySelector("#loaded");
+
 //---Get data from endpoint
 
 fetcher();
@@ -10,6 +14,8 @@ function fetcher(){
     .then( res  => res.json())
     .then( data => toHTML(data))
     .then (enableBtn)
+    loader.style.display="none"
+    loaded.style.display="flex"
 }
  
 //---Render Data to html
