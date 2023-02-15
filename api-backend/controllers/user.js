@@ -206,21 +206,10 @@ exports.doanswer = async (req, res, next) => {
         conn = await pool.getConnection();
 
         await conn.query(`
-            SET
-              @questionnaireID = ?,
-              @qID = ?,
-              @session = ?,
-              @optID = ?;
-
             INSERT INTO answers
             (session, ans, questionnaireID, qID)
-            VALUES (@session, @optID, @questionnaireID, @qID)
-            ON DUPLICATE KEY UPDATE
-                session = @session,
-                ans = @optID,
-                questionnaireID = @questionnaireID,
-                qID = @qID;`,
-        [req.params.questionnaireID, req.params.questionID, req.params.session, req.params.optionID]);
+            VALUES (?, ?, ?, ?);`,
+        [req.params.session, req.params.optionID, req.params.questionnaireID, req.params.questionID]);
 
         resdata = {
             status: "OK"
