@@ -1,6 +1,8 @@
 const questionnnaireURL="https://api.intelliq.site/intelliq_api/questionnaires";
 const dataConst = document.querySelector("#questn");
 
+//---Get data from endpoint
+
 fetcher();
  
 function fetcher(){
@@ -10,18 +12,21 @@ function fetcher(){
     .then (enableBtn)
 }
  
+//---Render Data to html
 function toHTML(data){
     data.forEach( (qsn) =>{
         dataConst.innerHTML +=`
         <tr>
-        <td><input type = "radio" name="questionnaireID" value="${qsn.questionnaireID}"><td>
-        <td>${qsn.questionnaireID}<td>
-        <td>${qsn.questionnaireTitle}<td>
-        <tr>
+        <td><input type = "radio" name="questionnaireID" value="${qsn.questionnaireID}" id="${qsn.questionnaireID}"><td>
+        <label style="width: 100%; height:100%;"for="${qsn.questionnaireID}">${qsn.questionnaireID}</label>
+        <td><label style="width: 100%; height:100%;"for="${qsn.questionnaireID}">${qsn.questionnaireTitle}</label></td>
+        </tr>
         `
     })
 
 }
+
+//--- Function to enable button only after user selects Questionnaires
 function enableBtn(){
     const qopt = document.querySelectorAll('input[type=radio][name="questionnaireID"]');
     qopt.forEach(radio=> radio.addEventListener('change',() => {
@@ -29,6 +34,8 @@ function enableBtn(){
         console.log("enabled button");
     }));
 }
+
+//--- POST selected QuestionnaireID to the endpoint
 let selectedID;
 const myform = document.getElementById('form');
 myform.addEventListener('submit', function(e){
