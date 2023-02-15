@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 echo -e "HEALTHCHECK TEST \n"
 sleep 0.5
@@ -32,7 +32,7 @@ read x
 
 echo -e "QUESTIONNAIRE-UPD TEST \n"
 sleep 0.5
-se2226 questionnaire-upd --source exveskoukis.json --format json
+se2226 questionnaire-upd --source ../post-files/questionnaire_upd/example.json --format json
 echo "Press any key to continue..."
 read x
 
