@@ -9,6 +9,9 @@ const question = document.getElementById("question");
 let qdata;
 const answer = new Map();
 
+//--- Add loader
+const loader = document.querySelector(".loader");
+const loaded = document.querySelector("#loaded");
 //---GET all the data we want from Endpoints----
 
 getquestions(questionURL);
@@ -25,6 +28,8 @@ async function getoptions(){
         const data = await res.json();
         qdata.questions[index].options = data.options;
     }
+    loader.style.display="none"
+    loaded.style.display="flex"
     init()
 }
 //---Starting Questionnaire
@@ -32,60 +37,80 @@ async function getoptions(){
 function init(){
     console.log(qdata);
     const currentQuestion = qdata.questions[0].qID;
+    let selected =null;
+    let nextqID =null;
     const qmap = new Map();
     for (let index = 0; index < qdata.questions.length; index++) {
         qmap.set(`${qdata.questions[index].qID}`,index);
     }
-    console.log(qmap);
+    //console.log(qmap);
+    enableBtn;
     iterate(currentQuestion);
 
-    
+//--- Adding Event Listener for sumbiting
+    const myform = document.getElementById('myform');
+    myform.addEventListener('submit',function(e){
+        e.preventDefault();
+        //console.log("Sumbited",selected);
+        console.log(answer);
+        //console.log("Next question:",nextqID);
+        iterate(nextqID);
+    });
+//--- Function to enable Button after checking an answer
+    function enableBtn(){
+        const qopt = document.querySelectorAll('[name="questionID"]');
+        qopt.forEach(radio=> radio.addEventListener('change',() => {
+            document.getElementById('sbt').removeAttribute("disabled");
+            console.log("enabled button");
+        }));
+    }
+
 
     function getAnswer(qid){
-        console.log("Giving Answer for:",qid);
-        let id = qmap.get(qid);
-        let selected;
-        let nextqID;
-        const myform = document.getElementById('myform');
-        myform.addEventListener('submit',function(e){
-            e.preventDefault();
-            const selectedOptions = document.getElementsByName('questionID');
-            console.log(selectedOptions);
-            for(var radio of selectedOptions){
-                if(radio.checked){
-                    console.log("radio id=",radio.id);
-                    selected=radio.value;
-                    answer.set(qid,selected);
-                    console.log("Selected Value:",selected);
-                    console.log("the question id current:",id);
-                    nextqID=qdata.questions[id].options[radio.id].nextqID;
-                    console.log("Next question ID that will be rendered:",nextqID);
-                    iterate(nextqID);
-                    break;
-                }
-            }
-        })
+        //console.log("Giving Answer for:",qid);
+        //console.log("Map result:",questid);
+        let selectedOptions=null;
+        selectedOptions = document.getElementsByName('questionID');
+        //console.log(selectedOptions);
+        for(var radio of selectedOptions){
+            radio.addEventListener('input',function(event){
+                event.preventDefault();
+                document.getElementById('sbt').removeAttribute("disabled");
+                console.log(event.target.getAttribute("nextqid"));
+                selected=event.target.value;
+                nextqID=event.target.getAttribute("nextqid");
+                //console.log(event.target);
+                //console.log("New current value=",selected);
+                //console.log("Next qID=",nextqID);
+            })
+        }
     }
 
     function iterate(qid){
         let id = qmap.get(qid);
-        console.log("Rendering:",qid);
+        document.getElementById('sbt').setAttribute("disabled","disabled");
+        //console.log("Rendering:",qid);
         question.innerText = qdata.questions[id].qtext;
         const showoptions = document.getElementById("option-container");
         showoptions.innerHTML="";
-        for (let index = 0; index < qdata.questions[id].options.length; index++) {
-            showoptions.innerHTML += `
-            <input type="radio" name="questionID" id="${index}" value="${qdata.questions[id].options[index].optID}">
-            <label for="${index}">${qdata.questions[id].options[index].opttxt}</label><br>
-            `
-        }
-        console.log("Requesting Answer for:",qid);
-        getAnswer(qid);
+        if(qdata.questions[id].required=='TRUE'){
+            //console.log(qdata.questions[id].options.length==1);
+            if(qdata.questions[id].options.length ==1 && qdata.questions[id].options[0].opttxt=='<open string>'){
+                showoptions.innerHTML += `
+                <input type="text" nextqid="${qdata.questions[id].options[0].nextqID}">
+                `
+            }else{
+                for (let index = 0; index < qdata.questions[id].options.length; index++) {
+                    showoptions.innerHTML += `
+                    <input type="radio" nextqid="${qdata.questions[id].options[index].nextqID}" id="${index}" name="questionID" value="${qdata.questions[id].options[index].optID}">
+                    <label for="${index}">${qdata.questions[id].options[index].opttxt}</label><br>
+                    `
+                }
+            }
+            getAnswer(qid);
+        }else{}
     }
     
-    function nextQuestion(qid){
-        iterate(qmap.get(qid));
-    }
 }
 
 
