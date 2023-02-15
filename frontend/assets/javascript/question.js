@@ -12,6 +12,7 @@ const answer = new Map();
 //--- Add loader
 const loader = document.querySelector(".loader");
 const loaded = document.querySelector("#loaded");
+
 //---GET all the data we want from Endpoints----
 
 getquestions(questionURL);
@@ -36,7 +37,7 @@ async function getoptions(){
 
 function init(){
     console.log(qdata);
-    const currentQuestion = qdata.questions[0].qID;
+    let currentqID = qdata.questions[0].qID;
     let selected =null;
     let nextqID =null;
     const qmap = new Map();
@@ -45,30 +46,35 @@ function init(){
     }
     //console.log(qmap);
     enableBtn;
-    iterate(currentQuestion);
+    iterate(currentqID);
 
 //--- Adding Event Listener for sumbiting
     const myform = document.getElementById('myform');
     myform.addEventListener('submit',function(e){
         e.preventDefault();
+        answer.set(currentqID,selected);
         //console.log("Sumbited",selected);
         console.log(answer);
         //console.log("Next question:",nextqID);
         iterate(nextqID);
     });
-//--- Function to enable Button after checking an answer
+//--- Buttons Configuration
     function enableBtn(){
         const qopt = document.querySelectorAll('[name="questionID"]');
         qopt.forEach(radio=> radio.addEventListener('change',() => {
             document.getElementById('sbt').removeAttribute("disabled");
-            console.log("enabled button");
         }));
     }
+    const clr= document.getElementById('clr');
+    clr.addEventListener('click', event =>{
+        document.getElementById('sbt').setAttribute("disabled","disabled");
+    });
 
-
+//--- Get Answers Function
     function getAnswer(qid){
         //console.log("Giving Answer for:",qid);
         //console.log("Map result:",questid);
+        currentqID=qid;
         let selectedOptions=null;
         selectedOptions = document.getElementsByName('questionID');
         //console.log(selectedOptions);
