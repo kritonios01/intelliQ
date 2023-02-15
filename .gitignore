@@ -2,10 +2,10 @@
 .DS_Store
 
 # API (Node.js) Files
-api-backend/node_modules/
+api-backend/node_modules
 api-backend/package-lock.json
 
 # CLI Files
 cli/__pycache__
 cli/.selected_server
-cli/intelliQ-CLI.egg-info
+cli/intelliQ_CLI.egg-info
