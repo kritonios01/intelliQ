@@ -50,14 +50,45 @@ h1{
   background-color: #94ac94;
   border-color: #94ac94;
 }
-
-
-.centered{
-  margin: auto;
-  width: 100%;
-  padding: 10px;
+.mycontainer{
+  width: 30vw;
+  height: 30vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
+}
+
+.centered{
+margin: auto;
+width: 100%;
+padding: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.flex-column{
+  display: flex;
+  flex-direction: column;
+}
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.qcontainer{
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  border: solid;
+  border-color: #7FC37E;
 }
 
