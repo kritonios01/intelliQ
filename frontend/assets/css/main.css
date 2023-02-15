@@ -51,8 +51,8 @@ h1{
   border-color: #94ac94;
 }
 .mycontainer{
-  width: 30vw;
-  height: 30vh;
+  width: 100vw;
+  height: 40vh;
   display: flex;
   justify-content: center;
   align-items: center;
