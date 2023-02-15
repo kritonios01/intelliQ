@@ -1,0 +1,770 @@
+{
+	"info": {
+		"_postman_id": "4f52911b-be4e-4d05-ae4a-9ff82fd09d04",
+		"name": "intelliQ-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Administrative Endpoints",
+			"item": [
+				{
+					"name": "Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(\"Reset All\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/healthcheck?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"healthcheck"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Questionnaire",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(\"Get All Keywords\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"description": "File containing questionnaire JSON data",
+									"type": "file",
+									"src": "example_questionnaire_data.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/questionnaire_upd?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire_upd"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset All",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(\"Update Questionnaire\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/resetall?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"resetall"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Questionnaire",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(\"Delete Questionnaire\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/resetq/:questionnaireID?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"resetq",
+								":questionnaireID"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Questionnaire",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(null);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/deleteq/:questionnaireID?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"deleteq",
+								":questionnaireID"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for performing administrative functions"
+		},
+		{
+			"name": "User Endpoints",
+			"item": [
+				{
+					"name": "Get All Keywords",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.collectionVariables.get(\"response_format\") == \"json\") {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.environment.set(\"test_keyword\", jsonData[0].keywordText);\r",
+									"}\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {\r",
+									"    const parse_csv = require('csv-parse/lib/sync');\r",
+									"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});\r",
+									"\r",
+									"    pm.environment.set(\"test_keyword\", csvData[0].keywordText);\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"Get All Questionnaires\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/keywords?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"keywords"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Questionnaires",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.collectionVariables.get(\"response_format\") == \"json\") {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.test(\"Database should contain only the test questionnaire\", function () {\r",
+									"        pm.expect(jsonData.length).to.eql(1);\r",
+									"    });\r",
+									"\r",
+									"    pm.environment.set(\"test_questionnaireID\", jsonData[0].questionnaireID);\r",
+									"}\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {\r",
+									"    const parse_csv = require('csv-parse/lib/sync');\r",
+									"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});\r",
+									"\r",
+									"    pm.test(\"Database should contain only the test questionnaire\", function () {\r",
+									"        pm.expect(csvData.length).to.eql(1);\r",
+									"    });\r",
+									"\r",
+									"    pm.environment.set(\"test_questionnaireID\", csvData[0].questionnaireID);\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"Get Questionnaire Data\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/questionnaires?format={{response_format}}&keyword={{test_keyword}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"questionnaires"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								},
+								{
+									"key": "keyword",
+									"value": "{{test_keyword}}",
+									"description": "Keyword Filter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Question Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.collectionVariables.get(\"response_format\") == \"json\") {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.environment.set(\"test_optionID\", jsonData.options[0].optID);\r",
+									"}\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {\r",
+									"    const parse_csv = require('csv-parse/lib/sync');\r",
+									"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});\r",
+									"\r",
+									"    pm.environment.set(\"test_optionID\", csvData[0].optID);\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"New Session\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/question/:questionnaireID/:questionID?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"question",
+								":questionnaireID",
+								":questionID"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								},
+								{
+									"key": "questionID",
+									"value": "{{test_questionID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Questionnaire Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.collectionVariables.get(\"response_format\") == \"json\") {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.environment.set(\"test_questionID\", jsonData.questions[0].qID);\r",
+									"}\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {\r",
+									"    const parse_csv = require('csv-parse/lib/sync');\r",
+									"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});\r",
+									"\r",
+									"    pm.environment.set(\"test_questionID\", csvData[0].qID);\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"Get Question Data\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/questionnaire/:questionnaireID?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"questionnaire",
+								":questionnaireID"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Session Answers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.collectionVariables.get(\"response_format\") == \"json\") {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.test(\"Database should contain only the test answer\", function () {\r",
+									"        pm.expect(jsonData.answers.length).to.eql(1);\r",
+									"        pm.expect(jsonData.answers[0].qID).to.eql(pm.environment.get(\"test_questionID\"));\r",
+									"        pm.expect(jsonData.answers[0].ans).to.eql(pm.environment.get(\"test_optionID\"));\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {\r",
+									"    const parse_csv = require('csv-parse/lib/sync');\r",
+									"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});\r",
+									"\r",
+									"    pm.test(\"Database should contain only the test answer\", function () {\r",
+									"        pm.expect(csvData.length).to.eql(1);\r",
+									"        pm.expect(csvData[0].qID).to.eql(pm.environment.get(\"test_questionID\"));\r",
+									"        pm.expect(csvData[0].ans).to.eql(pm.environment.get(\"test_optionID\"));\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"Get Question Answers\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/getsessionanswers/:questionnaireID/:session?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getsessionanswers",
+								":questionnaireID",
+								":session"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								},
+								{
+									"key": "session",
+									"value": "{{test_session}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Question Answers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.collectionVariables.get(\"response_format\") == \"json\") {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.test(\"Database should contain only the test answer\", function () {\r",
+									"        pm.expect(jsonData.answers.length).to.eql(1);\r",
+									"        pm.expect(jsonData.answers[0].session).to.eql(pm.environment.get(\"test_session\"));\r",
+									"        pm.expect(jsonData.answers[0].ans).to.eql(pm.environment.get(\"test_optionID\"));\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {\r",
+									"    const parse_csv = require('csv-parse/lib/sync');\r",
+									"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});\r",
+									"\r",
+									"    pm.test(\"Database should contain only the test answer\", function () {\r",
+									"        pm.expect(csvData.length).to.eql(1);\r",
+									"        pm.expect(csvData[0].session).to.eql(pm.environment.get(\"test_session\"));\r",
+									"        pm.expect(csvData[0].ans).to.eql(pm.environment.get(\"test_optionID\"));\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"Reset Questionnaire\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/getquestionanswers/:questionnaireID/:questionID?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getquestionanswers",
+								":questionnaireID",
+								":questionID"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								},
+								{
+									"key": "questionID",
+									"value": "{{test_questionID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.collectionVariables.get(\"response_format\") == \"json\") {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.environment.set(\"test_session\", jsonData.session);\r",
+									"}\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {\r",
+									"    const parse_csv = require('csv-parse/lib/sync');\r",
+									"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});\r",
+									"\r",
+									"    pm.environment.set(\"test_session\", csvData[0].session);\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"Do Answer\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/newsession/:questionnaireID?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"newsession",
+								":questionnaireID"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Do Answer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(\"Get Session Answers\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/doanswer/:questionnaireID/:questionID/:session/:optionID?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"doanswer",
+								":questionnaireID",
+								":questionID",
+								":session",
+								":optionID"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}",
+									"description": "Response Body Format"
+								}
+							],
+							"variable": [
+								{
+									"key": "questionnaireID",
+									"value": "{{test_questionnaireID}}"
+								},
+								{
+									"key": "questionID",
+									"value": "{{test_questionID}}"
+								},
+								{
+									"key": "session",
+									"value": "{{test_session}}"
+								},
+								{
+									"key": "optionID",
+									"value": "{{test_optionID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for use by client applications"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code should be OK\", function () {",
+					"    pm.response.to.be.ok;",
+					"});",
+					"",
+					"if(pm.collectionVariables.get(\"response_format\") == \"json\") {",
+					"    pm.test(\"Valid JSON response\", function () {",
+					"        pm.response.to.have.jsonBody;",
+					"    });",
+					"",
+					"    var jsonData = pm.response.json();",
+					"",
+					"    pm.test(\"No request failures\", function () {",
+					"        pm.expect(jsonData.status).not.to.eql(\"failed\");",
+					"    });",
+					"",
+					"    pm.test(\"No API errors\", function () {",
+					"        pm.expect(jsonData.status).not.to.eql(\"error\");",
+					"    });",
+					"}",
+					"",
+					"if(pm.collectionVariables.get(\"response_format\") == \"csv\") {",
+					"    const parse_csv = require('csv-parse/lib/sync');",
+					"    csvData = parse_csv(responseBody, {columns: true, skip_empty_lines: true});",
+					"",
+					"    pm.test(\"Valid CSV response\", function () {",
+					"        pm.expect(csvData).to.have.length.gte(1);",
+					"    });",
+					"",
+					"    pm.test(\"No request failures\", function () {",
+					"        pm.expect(csvData[0].status).not.to.eql(\"failed\");",
+					"    });",
+					"",
+					"    pm.test(\"No API errors\", function () {",
+					"        pm.expect(csvData[0].status).not.to.eql(\"error\");",
+					"    });",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "https://api.intelliq.site/",
+			"type": "default"
+		},
+		{
+			"key": "base_url",
+			"value": "{{server}}/intelliq_api/",
+			"type": "default"
+		},
+		{
+			"key": "response_format",
+			"value": "json",
+			"type": "default"
+		}
+	]
+}

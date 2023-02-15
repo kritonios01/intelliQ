@@ -67,6 +67,9 @@ $ openssl req -new -key key.pem -out csr.pem
 $ openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
 ```
 
+## Testing
+For the API application, a Postman collection version 2.1 file is included in the test directory.
+For the CLI application a shell script is included.
 
 ## Project Team
 | Full Name           | Registration Number  |
