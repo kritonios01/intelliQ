@@ -290,3 +290,21 @@ def select_server(host):
 			f.write(host)
 	except IOError:
 		pass
+
+@main.command(short_help='Deletes a questionnaire from the system')
+@click.option('--questionnaire_id', required=True)
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def deleteq(questionnaire_id, format):
+	'''Deletes a questionnaire from the system'''
+
+	click.echo('Deleting questionnaire..')
+	response=http.post(f'{get_base_url()}/admin/deleteq/{questionnaire_id}?format={format}')
+	if response.status_code != 200:
+		click.echo(f"Error! (Code: {response.status_code})")
+	else:
+		if(format=='csv'):
+			print(parse_csv(response.text))
+		else:
+			json_data=response.json()
+			for key in json_data:
+				print(f'{key} --> {json_data[key]}')
