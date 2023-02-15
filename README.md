@@ -17,7 +17,7 @@ Otherwise you may find manual instructions for each component below.
 3. Install required modules:
 	```shell
 	$ cd api-backend
-	$ npm install express mariadb multer https json2csv cors
+	$ npm install express mariadb multer https json2csv cors swagger-ui-express
 	```
 4. Open [config.js](api-backend/config.js) and configure the application.
 	- In order to use the HTTPS server, an SSL certificate is required. You may find instructions on how to create one yourself [below](#creating-a-self-signed-ssl-certificate).

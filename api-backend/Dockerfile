@@ -10,7 +10,7 @@ COPY . .
 RUN mv -f config-docker.js config.js
 
 # Install dependencies
-RUN npm install express mariadb multer json2csv cors
+RUN npm install express mariadb multer json2csv cors swagger-ui-express
 
 # Generate self-signed SSL certificate
 RUN mkdir ssl

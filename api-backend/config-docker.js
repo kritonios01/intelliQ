@@ -28,6 +28,10 @@ const config = {
         optionsSuccessStatus: 200
     },
 
+    docs: {
+        enabled: true
+    },
+
     mariadb: {
         host: "intelliq-database",
         port: 3306,

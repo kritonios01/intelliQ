@@ -1,5 +1,7 @@
 const multer = require(`multer`);
 const express = require(`express`);
+
+const config = require(`../config`);
 const errors = require(`../errors`);
 const controllers = require(`../controllers`);
 
@@ -85,5 +87,13 @@ router
     .route("/intelliq_api/getquestionanswers/:questionnaireID/:questionID")
     .get(controllers.user.getquestionanswers)
     .all(methodNotAllowed);
+
+if(config.docs.enabled) {
+    const swaggerUi = require('swagger-ui-express');
+    const swaggerDocument = require('../swagger-api-doc.json');
+    
+    router.use('/docs', swaggerUi.serve);
+    router.get('/docs', swaggerUi.setup(swaggerDocument));
+}
 
 module.exports = router;
