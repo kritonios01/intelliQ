@@ -67,7 +67,7 @@
 									"key": "file",
 									"description": "File containing questionnaire JSON data",
 									"type": "file",
-									"src": "example_questionnaire_data.json"
+									"src": ""
 								}
 							]
 						},
