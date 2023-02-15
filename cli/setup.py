@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(
-	name='intelliQ_CLI_Tools',
+	name='intelliQ-CLI',
 	version='1.0',
 	py_modules=['cli'],
-	install_requires=['Click','requests','pandas','tabulate'],
+	install_requires=['click','requests','pandas','tabulate'],
 	entry_points={
 		'console_scripts': [
 			'se2226=cli:main'

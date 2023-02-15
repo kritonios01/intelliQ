@@ -37,6 +37,11 @@ router
     .post(controllers.admin.resetq)
     .all(methodNotAllowed);
 
+router
+    .route("/intelliq_api/admin/deleteq/:questionnaireID")
+    .post(controllers.admin.deleteq)
+    .all(methodNotAllowed);
+
 /*
     User Endpoint Routes
 */

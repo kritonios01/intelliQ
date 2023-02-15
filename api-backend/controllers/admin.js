@@ -283,7 +283,63 @@ exports.resetq = async (req, res, next) => {
     try {
         conn = await pool.getConnection();
 
-        await conn.query(`DELETE FROM answers WHERE questionnaireID = ?;`, [req.params.questionnaireID]);
+        await conn.query(`
+            SET @questionnaireID = ?;
+
+            DELETE FROM answers WHERE questionnaireID = @questionnaireID;
+            DELETE FROM sessions WHERE questionnaireID = @questionnaireID;`,
+        [req.params.questionnaireID]);
+
+        resdata = {
+            status: "OK"
+        };
+    } catch(err) {
+        return next(err);
+    } finally {
+        if(req.query.format == `csv`) {
+            const parser = new Parser(Object.keys(resdata));
+
+            res.type(`text/csv`);
+            res.send(parser.parse(resdata));
+        } else {
+            res.status(200).json(resdata);
+        }
+
+        if(conn) conn.end();
+    }
+};
+
+/*
+    Endpoint Implementation
+    Resource URL: /admin/deleteq/:questionnaireID
+    Supported Methods: POST
+
+    Deletes a questionnaire from the database
+*/
+exports.deleteq = async (req, res, next) => {
+    if(!req.params.questionnaireID) {
+        return next(new errors.UsageError(`Missing parameter: questionnaireID`, 400));
+    }
+
+    let conn, resdata;
+
+    try {
+        conn = await pool.getConnection();
+
+        await conn.query(`
+            SET FOREIGN_KEY_CHECKS = 0;
+
+            SET @questionnaireID = ?;
+            
+            DELETE FROM answers WHERE questionnaireID = @questionnaireID;
+            DELETE FROM sessions WHERE questionnaireID = @questionnaireID;
+            DELETE FROM options WHERE questionnaireID = @questionnaireID;
+            DELETE FROM questions WHERE questionnaireID = @questionnaireID;
+            DELETE FROM questionnaire_keywords WHERE questionnaireID = @questionnaireID;
+            DELETE FROM questionnaires WHERE questionnaireID = @questionnaireID;
+            
+            SET FOREIGN_KEY_CHECKS = 1;`,
+        [req.params.questionnaireID]);
 
         resdata = {
             status: "OK"

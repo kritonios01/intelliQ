@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `intelliq`.`questionnaires`;
 
 CREATE TABLE IF NOT EXISTS `intelliq`.`questionnaires` (
   `questionnaireID` VARCHAR(8) NOT NULL PRIMARY KEY,
-  `questionnaireTitle` VARCHAR(45) NOT NULL)
+  `questionnaireTitle` VARCHAR(128) NOT NULL)
 ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS `intelliq`.`sessions`;

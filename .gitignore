@@ -2,11 +2,10 @@
 .DS_Store
 
 # API (Node.js) Files
-api-backend/node_modules/
+api-backend/node_modules
 api-backend/package-lock.json
 
 # CLI Files
-cli/virtenv/
-cli/intelliQ_CLI_Tools.egg-info
 cli/__pycache__
-cli/examples
+cli/.selected_server
+cli/intelliQ_CLI.egg-info
