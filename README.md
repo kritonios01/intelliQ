@@ -1,11 +1,14 @@
 # intelliQ 📃
+A full-stack intelligent questionnaire application.  
+https://intelliq.site
+
 Semester project repository for the 2022-2023 Software Engineering course.
 
 School of Electrical and Computer Engineering  
 National Technical University of Athens
 
 ## Build Instructions
-If you have **Docker** installed, simply clone and run `docker compose up`.  
+> 🐳 If you have **[Docker](https://www.docker.com/)** installed, simply clone and run `docker compose up`.  
 Otherwise you may find manual instructions for each component below.
 
 ### API Backend Application
@@ -45,9 +48,11 @@ Prerequisites: [python3](https://www.python.org/), python3-venv
 	$ source <venv_name>/bin/activate
 	```
 
-You may choose not to use a virtual environment, however dependencies will be installed globally that way.
+> You may choose not to use a virtual environment, however dependencies will be installed globally that way.
 
-The CLI tools are accessible through the `se2226` alias in the virtual environment.
+The CLI is accessible through the `se2226` alias in the virtual environment.
+
+**Use the ``se2226 select-server`` command to switch between the local and the live demo API server.**
 
 ### Database
 This implementation of the intelliQ specification is compatible with MariaDB.
@@ -59,8 +64,13 @@ Make sure to initialise the database using [schema.sql](scripts/mariadb/schema.s
 $ mysql -u <user> [-p] < scripts/mariadb/schema.sql
 ```
 
-## Creating a self-signed SSL certificate
+### Frontend
+You may use the web server of your choise ([Apache](https://httpd.apache.org/), [Nginx](https://www.nginx.com/), ..)  
+Simply drag and drop the contents of the [frontend](frontend/) folder into the root directory of your site.
 
+__Depending on how you deployed the rest of the components, you may need to configure the server URL to use for API queries.__
+
+## Creating a self-signed SSL certificate
 ```shell
 $ openssl genrsa -out key.pem
 $ openssl req -new -key key.pem -out csr.pem
@@ -68,8 +78,12 @@ $ openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
 ```
 
 ## Testing
-For the API application, a Postman collection version 2.1 file is included in the test directory.
-For the CLI application a shell script is included.
+### API Application
+A [Postman](https://www.postman.com/) version 2.1 collection file can be found [here](test/api-backend/intelliQ-API.postman_collection.json).  
+This collection includes the full API structure and thorough test scripts which may be used to verify correct functionality of the service.
+
+### Command Line Interface
+CLI tests are performed using the [cli_tests.sh](test/cli/cli_tests.sh) shell script.
 
 ## Project Team
 | Full Name           | Registration Number  |
