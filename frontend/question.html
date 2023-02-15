@@ -20,14 +20,20 @@
         </div>
         </div>
     </nav>
-    <div class="centered">
-        <div id="questionnaire">
-            <h3 style="text-align: center;" id="question">Question Goes Here</h3>
+        <div class ="mycontainer qcontainer">
+            <div id="questionnaire"class="justify-center flex-column">
+                <h3 id="question"></h3>
+                <form id="myform">
+                <div id="option-container">
+                    
+                </div>
+                <div class=" flex-row" style="margin-top:10px">
+                    <button type="reset" class="btn btn-primary homebutton">Clear</button>
+                    <button type="submit" class="btn btn-primary homebutton" style="margin-left: 10px;">Next</button>
+                </div>
+                </form>
+            </div>
         </div>
-        <div class="option-container">
-            <form id="optionForm"></form>
-        </div>
-    </div>
     <script type="module" src="./assets/javascript/question.js"></script>
 </body>
 </html>
