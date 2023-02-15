@@ -1,0 +1,890 @@
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "description" : "Live Demo Server",
+    "url" : "https://api.intelliq.site/intelliq_api"
+  }, {
+    "description" : "Docker Server",
+    "url" : "https://localhost:9103/intelliq_api"
+  } ],
+  "info" : {
+    "title" : "intelliQ-API",
+    "description" : "Application programming interface for the INTELLIQ intelligent questionnaire software.",
+    "version" : "1.0.0",
+    "contact" : {
+      "name" : "Ioannis Dressos",
+      "email" : "el19608@mail.ntua.gr"
+    }
+  },
+  "tags" : [ {
+    "name" : "admin",
+    "description" : "Administrative endpoints"
+  }, {
+    "name" : "user",
+    "description" : "User endpoints"
+  } ],
+  "paths" : {
+    "/admin/healthcheck" : {
+      "get" : {
+        "tags" : [ "admin" ],
+        "summary" : "Gets the database connection status",
+        "operationId" : "healthcheck",
+        "description" : "Returns the status of the connection between the API application and the database server",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Database connection status fetched successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    },
+                    "dbconnection" : {
+                      "type" : "string",
+                      "example" : "10.5.18-MariaDB-0+deb11u1"
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "400" : {
+            "description" : "Request error"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        }
+      }
+    },
+    "/admin/questionnaire_upd" : {
+      "post" : {
+        "tags" : [ "admin" ],
+        "summary" : "Adds or updates a questionnaire",
+        "operationId" : "questionnaire_upd",
+        "description" : "Adds (or updates) a questionnaire along with its questions and their options to the database",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Questionnaire successfully added/updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        },
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Questionnaire"
+              }
+            }
+          },
+          "description" : "Questionnaire to add/update"
+        }
+      }
+    },
+    "/admin/resetall" : {
+      "post" : {
+        "tags" : [ "admin" ],
+        "summary" : "Resets the system",
+        "operationId" : "resetall",
+        "description" : "Deletes all data from the database, resetting the system to an empty state",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "System successfully reset",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/admin/resetq/{questionnaireID}" : {
+      "post" : {
+        "tags" : [ "admin" ],
+        "summary" : "Deletes all answers given to a questionnaire",
+        "operationId" : "resetq",
+        "description" : "Deletes all answers and sessions concering a questionnaire from the database",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Questionnaire answers successfully deleted",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/admin/deleteq/{questionnaireID}" : {
+      "post" : {
+        "tags" : [ "admin" ],
+        "summary" : "Deletes a questionnaire from the system",
+        "operationId" : "deleteq",
+        "description" : "Deletes a questionnaire along with all it's data from the database",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Questionnaire successfully deleted",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/questionnaire/{questionnaireID}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets a questionnaire's data",
+        "operationId" : "questionnaire",
+        "description" : "Returns basic data of a questionnaire",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Questionnaire data successfully fetched",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Questionnaire"
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "204" : {
+            "description" : "no data"
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/questionnaires" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets all questionnaires",
+        "operationId" : "questionnaires",
+        "description" : "Returns a list of all questionnaires in the system",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Questionnaires successfully fetched",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Questionnaire_Basic"
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "204" : {
+            "description" : "no data"
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/keywords" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets all keywords",
+        "operationId" : "keywords",
+        "description" : "Returns a list of all questionnaire keywords in the system",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Keywords successfully fetched",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Keyword"
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "204" : {
+            "description" : "no data"
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/question/{questionnaireID}/{questionID}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets a question's data",
+        "operationId" : "question",
+        "description" : "Returns all data of a questionnaire's question",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "questionID",
+          "description" : "Unique questionnaire question ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Question data successfully fetched",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Question"
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "204" : {
+            "description" : "no data"
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/doanswer/{questionnaireID}/{questionID}/{session}/{optionID}" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Submit an answer to a question",
+        "operationId" : "doanswer",
+        "description" : "Submit an option as the answer to a question during a session",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "questionID",
+          "description" : "Unique questionnaire question ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "session",
+          "description" : "Unique session ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "optionID",
+          "description" : "Unique question option ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Answer successfully submitted",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/newsession/{questionnaireID}" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Create a new session",
+        "operationId" : "newsession",
+        "description" : "Creates and returns a new session for answering a questionnaire",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Session successfully created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    },
+                    "questionnaireID" : {
+                      "type" : "string",
+                      "example" : "QQ000"
+                    },
+                    "session" : {
+                      "type" : "string",
+                      "example" : "S0"
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/getsessionanswers/{questionnaireID}/{session}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets all answers given to a questionnaire over a session",
+        "operationId" : "getsessionanswers",
+        "description" : "Returns all answers given to a questionnaire during a session",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "session",
+          "description" : "Unique session ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Session answers successfully fetched",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "questionnaireID" : {
+                      "type" : "string",
+                      "example" : "QQ000"
+                    },
+                    "session" : {
+                      "type" : "string",
+                      "example" : "S0"
+                    },
+                    "answers" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "qID" : {
+                            "type" : "string",
+                            "example" : "Q00"
+                          },
+                          "ans" : {
+                            "type" : "string",
+                            "example" : "Q00A0"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "204" : {
+            "description" : "no data"
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/getquestionanswers/{questionnaireID}/{questionID}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets all answers given to a question over multiple sessions",
+        "operationId" : "getquestionanswers",
+        "description" : "Returns all answers given to a questionnaire's question over all sessions",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "questionnaireID",
+          "description" : "Unique questionnaire ID in database",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "questionID",
+          "description" : "Unique questionnaire question ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Question answers successfully fetched",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "questionnaireID" : {
+                      "type" : "string",
+                      "example" : "QQ000"
+                    },
+                    "questionID" : {
+                      "type" : "string",
+                      "example" : "S0"
+                    },
+                    "answers" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "session" : {
+                            "type" : "string",
+                            "example" : "S0"
+                          },
+                          "ans" : {
+                            "type" : "string",
+                            "example" : "Q00A0"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "204" : {
+            "description" : "no data"
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Questionnaire" : {
+        "type" : "object",
+        "required" : [ "questionnaireID", "questionnaireTitle", "keywords", "questions" ],
+        "properties" : {
+          "questionnaireID" : {
+            "type" : "string",
+            "example" : "QQ000"
+          },
+          "questionnaireTitle" : {
+            "type" : "string",
+            "example" : "Student Feedback Questionnaire"
+          },
+          "keywords" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "example" : "college"
+            },
+            "uniqueItems" : true
+          },
+          "questions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Question_Basic"
+            }
+          }
+        }
+      },
+      "Questionnaire_Basic" : {
+        "type" : "object",
+        "required" : [ "questionnaireID", "questionnaireTitle" ],
+        "properties" : {
+          "questionnaireID" : {
+            "type" : "string",
+            "example" : "QQ000"
+          },
+          "questionnaireTitle" : {
+            "type" : "string",
+            "example" : "Student Feedback Questionnaire"
+          }
+        }
+      },
+      "Question" : {
+        "type" : "object",
+        "required" : [ "qID", "qtext", "required", "type", "options" ],
+        "properties" : {
+          "qID" : {
+            "type" : "string",
+            "example" : "Q00"
+          },
+          "qtext" : {
+            "type" : "string",
+            "example" : "What is your field of study?"
+          },
+          "required" : {
+            "type" : "string",
+            "enum" : [ "TRUE", "FALSE" ]
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "question", "profile" ]
+          },
+          "options" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Option"
+            }
+          }
+        }
+      },
+      "Question_Basic" : {
+        "type" : "object",
+        "required" : [ "qID", "qtext", "required", "type" ],
+        "properties" : {
+          "qID" : {
+            "type" : "string",
+            "example" : "Q00"
+          },
+          "qtext" : {
+            "type" : "string",
+            "example" : "What is your field of study?"
+          },
+          "required" : {
+            "type" : "string",
+            "enum" : [ "TRUE", "FALSE" ]
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "question", "profile" ]
+          }
+        }
+      },
+      "Option" : {
+        "type" : "object",
+        "required" : [ "optID", "opttxt", "nextqID" ],
+        "properties" : {
+          "optID" : {
+            "type" : "string",
+            "example" : "Q00A0"
+          },
+          "opttxt" : {
+            "type" : "string",
+            "example" : "Computer Science"
+          },
+          "nextqID" : {
+            "type" : "string",
+            "example" : "Q01"
+          }
+        }
+      },
+      "Keyword" : {
+        "type" : "object",
+        "required" : [ "keywordID", "keywordText" ],
+        "properties" : {
+          "keywordID" : {
+            "type" : "integer",
+            "example" : 0
+          },
+          "keywordText" : {
+            "type" : "string",
+            "example" : "college"
+          }
+        }
+      }
+    }
+  }
+}
