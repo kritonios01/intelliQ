@@ -37,7 +37,7 @@ async function getoptions(){
     loaded.style.display="flex"
     init()
 }
-//---Starting Questionnaire
+//---Initializing function
 
 function init(){
     console.log(qdata);
@@ -65,7 +65,9 @@ function init(){
         let id = qmap.get(currentqID);
         answer.set(currentqID,selected);
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
-            if(qdata.questions[id].options[index].opttxt=='<open string>'){
+            if(qdata.questions[id].options[index].opttxt=='<open string>' && !optiontext.has(selected)){
+                console.log(qdata.questions[id].options[index].optID);
+                console.log("TRUE for",selected);
                 optiontext.set(selected,selected);
             }
         }
@@ -89,7 +91,6 @@ function init(){
             const id = qmap.get(ivalue.value[0]);
             const text = qdata.questions[id].qtext;
             const otext = optiontext.get(ivalue.value[1]);
-            console.log(otext);
             mylist.innerHTML +=`<li class="display-flex"><h4>${text}<h4> -> <h3 style="color: #0f420e;">${otext}</h3></li>`
             ivalue=iter.next();
         }
@@ -104,6 +105,7 @@ function init(){
                 .then(res => res.json())
                 .then(data=> console.log(data)) 
                 .then(results=iterator.next())
+                .then( document.location.href="./index.html")
             }
         })
     }
@@ -135,6 +137,7 @@ function init(){
                 }
                 document.getElementById('sbt').removeAttribute("disabled");
                 nextqID=event.target.getAttribute("nextqid");
+                console.log(selected);
             })
         }
     }
@@ -176,13 +179,3 @@ function init(){
     //--- Start
     iterate(currentqID);
 }
-
-
-
-/*getNewQuestion
-->Get asnwer
-->Store answer
-->Give next question based on nextqid
-->If nextqid == null stop
-*/
-
