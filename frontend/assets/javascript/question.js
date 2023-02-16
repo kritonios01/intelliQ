@@ -7,6 +7,7 @@ const session = urlParam.get('session');
 const questionURL = `https://api.intelliq.site/intelliq_api/questionnaire/${questionnaireID}`;
 const question = document.getElementById("question");
 const resultButton = document.getElementById('result');
+const skip = document.getElementById('skip');
 let qdata;
 const answer = new Map();
 const optiontext = new Map();
@@ -62,6 +63,7 @@ function init() {
     const myform = document.getElementById('myform');
     myform.addEventListener('submit', function(e) {
         e.preventDefault();
+        skip.style.display = "none";
         let id = qmap.get(currentqID);
         answer.set(currentqID, selected);
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
@@ -146,14 +148,14 @@ function init() {
         const showoptions = document.getElementById("option-container");
         showoptions.innerHTML = "";
         if (qdata.questions[id].required == 'FALSE') {
-            const skip = document.getElementById('skip');
             skip.style.display = "flex";
             skip.addEventListener('click', event => {
-                event.preventDefault();
+                //event.preventDefault();
                 for (let index = 0; index < qdata.questions[id].options.length; index++) {
                     if (qdata.questions[id].options[index].nextqID == null) {
                         showResults();
                     } else {
+                        skip.style.display = "none";
                         iterate(qdata.questions[id + 1].qID);
                     }
                 }
