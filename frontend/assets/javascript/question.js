@@ -43,6 +43,7 @@ async function getoptions() {
 function init() {
     console.log(qdata);
     let currentqID = qdata.questions[0].qID;
+    let currentOID = null;
     //let currentOID= null;
     let selected = null;
     let nextqID = null;
@@ -65,10 +66,10 @@ function init() {
         e.preventDefault();
         skip.style.display = "none";
         let id = qmap.get(currentqID);
-        answer.set(currentqID, selected);
+        answer.set(currentqID, currentOID);
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
             if (qdata.questions[id].options[index].opttxt == '<open string>' && !optiontext.has(selected)) {
-                optiontext.set(selected, selected);
+                optiontext.set(currentOID, selected);
             }
         }
         if (nextqID == 'null') {
@@ -95,6 +96,8 @@ function init() {
         resultButton.style.display = "flex";
         resultButton.addEventListener('click', e => {
             e.preventDefault;
+            console.log(answer);
+            console.log(optiontext);
             const iterator = answer.entries();
             let results = iterator.next();
             while (!results.done) {
@@ -104,8 +107,8 @@ function init() {
                     .then(data => console.log(data))
                     .then(results = iterator.next())
             }
-            document.location.href = "./index.html"
-            alert("Thank you for asnwering!")
+            //document.location.href = "./index.html"
+            //alert("Thank you for answering!")
         })
     }
 
@@ -130,9 +133,9 @@ function init() {
                 selected = event.target.value;
                 if (event.target.type != 'text') {
                     optiontext.set(selected, event.target.getAttribute("opttxt"));
-                    //currentOID=selected;
+                    currentOID = selected;
                 } else {
-                    //currentOID=event.target.getAttribute("optid");
+                    currentOID = event.target.getAttribute("optid");
                 }
                 document.getElementById('sbt').removeAttribute("disabled");
                 nextqID = event.target.getAttribute("nextqid");
