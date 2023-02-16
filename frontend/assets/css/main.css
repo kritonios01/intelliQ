@@ -67,6 +67,10 @@ display: flex;
 justify-content: center;
 align-items: center;
 }
+.btn-centered{
+  margin: auto;
+  display: flex;
+}
 
 .flex-column{
   display: flex;
@@ -89,7 +93,7 @@ align-items: center;
   margin-top: 5vh;
   margin-bottom: 5vh;
   border: solid;
-  border-color: #7FC37E;
+  border-color: #0f420e;
 }
 
 .loader {
@@ -106,6 +110,18 @@ align-items: center;
   100% { transform: rotate(360deg); }
 }
 
-#skip{
+#skip,
+#result{
   display: none;
+}
+
+#results{
+  font-size:xx-large;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.display-flex{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }

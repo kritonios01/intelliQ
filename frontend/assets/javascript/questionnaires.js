@@ -12,10 +12,13 @@ fetcher();
 function fetcher(){
     fetch(questionnnaireURL)
     .then( res  => res.json())
-    .then( data => toHTML(data))
+    .then( data => {
+        toHTML(data)
+        loader.style.display="none"
+        loaded.style.display="flex"
+    })
     .then (enableBtn)
-    loader.style.display="none"
-    loaded.style.display="flex"
+
 }
  
 //---Render Data to html
