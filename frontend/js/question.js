@@ -88,7 +88,20 @@ function init() {
         let ivalue = iter.next();
         while (!ivalue.done) {
             const id = qmap.get(ivalue.value[0]);
-            const text = qdata.questions[id].qtext;
+            let text = qdata.questions[id].qtext;
+            for(let i = 0; i < qdata.questions.length; i++) {
+                text = text.replace("[*" + qdata.questions[i].qID + "]", "\"" + qdata.questions[i].qtext + "\"");
+    
+                for(let j = 0; j < qdata.questions[i].options.length; j++) {
+                    const optID = qdata.questions[i].options[j].optID;
+                    let opttxt = qdata.questions[i].options[j].opttxt;
+
+                    if(opttxt == "<open string>") opttxt = optiontext.get(optID);
+
+                    text = text.replace("[*" + optID + "]", "\"" + opttxt + "\"");
+                }
+            }
+
             const otext = optiontext.get(ivalue.value[1]);
             mylist.innerHTML += `<li class="display-flex"><h4>${text}<h4> -> <h3 style="color: #0f420e;">${otext}</h3></li>`
             ivalue = iter.next();
@@ -153,7 +166,12 @@ function init() {
             rendered_text = rendered_text.replace("[*" + qdata.questions[i].qID + "]", "\"" + qdata.questions[i].qtext + "\"");
 
             for(let j = 0; j < qdata.questions[i].options.length; j++) {
-                rendered_text = rendered_text.replace("[*" + qdata.questions[i].options[j].optID + "]", "\"" + qdata.questions[i].options[j].opttxt + "\"");
+                const optID = qdata.questions[i].options[j].optID;
+                let opttxt = qdata.questions[i].options[j].opttxt;
+
+                if(opttxt == "<open string>") opttxt = optiontext.get(optID);
+
+                rendered_text = rendered_text.replace("[*" + optID + "]", "\"" + opttxt + "\"");
             }
         }
 
