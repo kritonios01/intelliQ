@@ -150,7 +150,6 @@ function init() {
         if (qdata.questions[id].required == 'FALSE') {
             skip.style.display = "flex";
             skip.addEventListener('click', event => {
-                //event.preventDefault();
                 for (let index = 0; index < qdata.questions[id].options.length; index++) {
                     if (qdata.questions[id].options[index].nextqID == null) {
                         showResults();
