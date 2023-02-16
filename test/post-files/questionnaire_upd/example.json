@@ -203,12 +203,12 @@
         {
           "optID": "Q08A1",
           "opttxt": "Ναι",
-          "nextqID": "Q09"
+          "nextqID": "-"
         },
         {
           "optID": "Q08A2",
           "opttxt": "Οχι",
-          "nextqID": "-"
+          "nextqID": "Q09"
         }
       ]
     },
