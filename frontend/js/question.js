@@ -121,7 +121,7 @@ function init() {
                     .then(results = iterator.next())
             }
             //document.location.href = "./index.html"
-            //alert("Thank you for answering!")
+            alert("Thank you for answering!")
         })
     }
 

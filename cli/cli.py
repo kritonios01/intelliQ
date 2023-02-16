@@ -82,7 +82,7 @@ def questionnaire_upd(source, format):
 	'''Uploads and inserts or updates questionnaire data to the system'''
 
 	try:
-		file = {'file': ('file.json', open(source,'r'), 'application/json', {})}
+		file = {'file': ('file.json', open(source,'r',encoding='utf-8'), 'application/json', {})}
 		click.echo('Uploading questionnaire data..')
 		response = http.post(f'{get_base_url()}/admin/questionnaire_upd?format={format}', files=file)
 		if response.status_code != 200:
