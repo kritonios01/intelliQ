@@ -22,31 +22,6 @@ h1{
   text-align: center;
 }
 
-.mynav{
-  background-color: #7FC37E;
-}
-
-.navfont{
-  font-size: 20px;
-  color: #F9F7F7;
-}
-
-.homebutton{
-  background-color: #7FC37E;
-  border-color: #7FC37E;
-}
-.homebutton:hover{
-  background-color: #63a162;
-  border-color: #63a162;
-}
-.homebutton:active{
-  background-color: #94c993;
-  border-color: #94c993;
-}
-.homebutton:disabled{
-  background-color: #94ac94;
-  border-color: #94ac94;
-}
 .mycontainer{
   width: 100vw;
   height: 40vh;
