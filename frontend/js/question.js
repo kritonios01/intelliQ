@@ -1,5 +1,4 @@
-//---Initializing variables
-
+//--- Initialize variables
 const queryString = window.location.search;
 const urlParam = new URLSearchParams(queryString);
 const questionnaireID = urlParam.get('questionnaireID');
@@ -12,14 +11,11 @@ let qdata;
 const answer = new Map();
 const optiontext = new Map();
 
-
-
 //--- Add loader
 const loader = document.querySelector(".loader");
 const loaded = document.querySelector("#loaded");
 
 //--- Get all the data we need from API
-
 getquestions(questionURL);
 
 async function getquestions(url) {
@@ -38,8 +34,8 @@ async function getoptions() {
     loaded.style.display = "flex"
     init()
 }
-//--- Init function
 
+//--- Init function
 function init() {
     let currentqID = qdata.questions[0].qID;
     let currentOID = null;
@@ -53,7 +49,6 @@ function init() {
 
 
     //--- Buttons Configuration
-
     const clr = document.getElementById('clr');
     clr.addEventListener('click', () => {
         document.getElementById('sbt').setAttribute("disabled", "disabled");
@@ -71,7 +66,7 @@ function init() {
                 optiontext.set(currentOID, selected);
             }
         }
-        if (nextqID == 'null') {
+        if(nextqID == null) {
             showResults();
         } else {
             iterate(nextqID);
@@ -116,8 +111,9 @@ function init() {
                     .then(res => res.json())
                     .then(results = iterator.next())
             }
-            //document.location.href = "./index.html"
+
             alert("Thanks for answering!")
+            setTimeout(function () { window.location.href = "index.html"; }, 1000);
         })
     }
 
@@ -151,8 +147,8 @@ function init() {
             })
         }
     }
-    //--- Render questions
 
+    //--- Render questions
     function iterate(qid) {
         let id = qmap.get(qid);
         document.getElementById('sbt').setAttribute("disabled", "disabled");
@@ -202,6 +198,7 @@ function init() {
 
         getAnswer(qid);
     }
+
     //--- Start
     iterate(currentqID);
 }
