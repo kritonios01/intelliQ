@@ -66,8 +66,6 @@ function init(){
         answer.set(currentqID,selected);
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
             if(qdata.questions[id].options[index].opttxt=='<open string>' && !optiontext.has(selected)){
-                console.log(qdata.questions[id].options[index].optID);
-                console.log("TRUE for",selected);
                 optiontext.set(selected,selected);
             }
         }
@@ -137,7 +135,6 @@ function init(){
                 }
                 document.getElementById('sbt').removeAttribute("disabled");
                 nextqID=event.target.getAttribute("nextqid");
-                console.log(selected);
             })
         }
     }
@@ -154,10 +151,12 @@ function init(){
             skip.style.display="flex";
             skip.addEventListener('click',event=>{
                 event.preventDefault();
-                if(id == qdata.questions.length -1){
-                    console.log("showResults();");
-                }else{
-                    iterate(qdata.questions[id+1].qID);
+                for (let index = 0; index < qdata.questions[id].options.length; index++) {
+                    if(qdata.questions[id].options[index].nextqID ==null){
+                        showResults();
+                    }else{
+                        iterate(qdata.questions[id+1].qID);
+                    }
                 }
             });
         }
