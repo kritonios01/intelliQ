@@ -52,7 +52,7 @@ Prerequisites: [python3](https://www.python.org/), python3-venv
 
 The CLI is accessible through the `se2226` alias in the virtual environment.
 
-**Use the ``se2226 select-server`` command to switch between the local and the live demo API server.**
+**Use the ``se2226 set-server`` command to set the API server for making calls to (default: ``localhost:9103``).**
 
 ### Database
 This implementation of the intelliQ specification is compatible with MariaDB.

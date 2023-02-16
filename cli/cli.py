@@ -297,10 +297,10 @@ def stats(format):
 			for key in json_data:
 				print(f'{key} --> {json_data[key]}')
 
-@main.command(short_help='Selects the API server to use for queries')
-@click.option('--host', prompt=True, required=True, type=click.Choice(['api.intelliq.site:443','localhost:9103']))
-def select_server(host):
-	'''Selects the API server to use for queries'''
+@main.command(short_help='Sets the API server to use for queries')
+@click.option('--host', prompt="Please input the desired API server host", required=True)
+def set_server(host):
+	'''Sets the API server to use for queries'''
 
 	try:
 		with open(script_path + '/.selected_server', 'w') as f:
