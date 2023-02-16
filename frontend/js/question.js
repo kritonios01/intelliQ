@@ -18,7 +18,7 @@ const optiontext = new Map();
 const loader = document.querySelector(".loader");
 const loaded = document.querySelector("#loaded");
 
-//---GET all the data we want from Endpoints----
+//--- Get all the data we need from API
 
 getquestions(questionURL);
 
@@ -38,10 +38,9 @@ async function getoptions() {
     loaded.style.display = "flex"
     init()
 }
-//---Initializing function
+//--- Init function
 
 function init() {
-    console.log(qdata);
     let currentqID = qdata.questions[0].qID;
     let currentOID = null;
     //let currentOID= null;
@@ -60,9 +59,9 @@ function init() {
         document.getElementById('sbt').setAttribute("disabled", "disabled");
     });
 
-    //--- Adding Event Listener for sumbiting
+    //--- Event listener for sumbiting
     const myform = document.getElementById('myform');
-    myform.addEventListener('submit', function(e) {
+    myform.addEventListener('submit', function (e) {
         e.preventDefault();
         skip.style.display = "none";
         let id = qmap.get(currentqID);
@@ -79,7 +78,7 @@ function init() {
         }
     });
 
-    //--- Show Results Function
+    //--- Shows results
     function showResults() {
         const resultdiv = document.getElementById('questionnaire');
         resultdiv.innerHTML = `<ul id="results"></ul>`
@@ -89,14 +88,14 @@ function init() {
         while (!ivalue.done) {
             const id = qmap.get(ivalue.value[0]);
             let text = qdata.questions[id].qtext;
-            for(let i = 0; i < qdata.questions.length; i++) {
+            for (let i = 0; i < qdata.questions.length; i++) {
                 text = text.replace("[*" + qdata.questions[i].qID + "]", "\"" + qdata.questions[i].qtext + "\"");
-    
-                for(let j = 0; j < qdata.questions[i].options.length; j++) {
+
+                for (let j = 0; j < qdata.questions[i].options.length; j++) {
                     const optID = qdata.questions[i].options[j].optID;
                     let opttxt = qdata.questions[i].options[j].opttxt;
 
-                    if(opttxt == "<open string>") opttxt = optiontext.get(optID);
+                    if (opttxt == "<open string>") opttxt = optiontext.get(optID);
 
                     text = text.replace("[*" + optID + "]", "\"" + opttxt + "\"");
                 }
@@ -109,23 +108,20 @@ function init() {
         resultButton.style.display = "flex";
         resultButton.addEventListener('click', e => {
             e.preventDefault;
-            console.log(answer);
-            console.log(optiontext);
             const iterator = answer.entries();
             let results = iterator.next();
             while (!results.done) {
                 const sessionURL = `https://api.intelliq.site/intelliq_api/doanswer/${questionnaireID}/${results.value[0]}/${session}/${results.value[1]}`
                 fetch(sessionURL, { method: 'POST' })
                     .then(res => res.json())
-                    .then(data => console.log(data))
                     .then(results = iterator.next())
             }
             //document.location.href = "./index.html"
-            alert("Thank you for answering!")
+            alert("Thanks for answering!")
         })
     }
 
-    //--- Get Answers Function
+    //--- Gets answers
     function getAnswer(qid) {
         currentqID = qid;
         let selectedOptions = null;
@@ -141,7 +137,7 @@ function init() {
                     }
                 })
             }
-            radio.addEventListener('input', function(event) {
+            radio.addEventListener('input', function (event) {
                 event.preventDefault();
                 selected = event.target.value;
                 if (event.target.type != 'text') {
@@ -155,21 +151,21 @@ function init() {
             })
         }
     }
-    //---Render Questions
+    //--- Render questions
 
     function iterate(qid) {
         let id = qmap.get(qid);
         document.getElementById('sbt').setAttribute("disabled", "disabled");
 
         let rendered_text = qdata.questions[id].qtext;
-        for(let i = 0; i < qdata.questions.length; i++) {
+        for (let i = 0; i < qdata.questions.length; i++) {
             rendered_text = rendered_text.replace("[*" + qdata.questions[i].qID + "]", "\"" + qdata.questions[i].qtext + "\"");
 
-            for(let j = 0; j < qdata.questions[i].options.length; j++) {
+            for (let j = 0; j < qdata.questions[i].options.length; j++) {
                 const optID = qdata.questions[i].options[j].optID;
                 let opttxt = qdata.questions[i].options[j].opttxt;
 
-                if(opttxt == "<open string>") opttxt = optiontext.get(optID);
+                if (opttxt == "<open string>") opttxt = optiontext.get(optID);
 
                 rendered_text = rendered_text.replace("[*" + optID + "]", "\"" + opttxt + "\"");
             }
