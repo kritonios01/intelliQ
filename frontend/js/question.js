@@ -39,14 +39,12 @@ async function getoptions() {
 function init() {
     let currentqID = qdata.questions[0].qID;
     let currentOID = null;
-    //let currentOID= null;
     let selected = null;
     let nextqID = null;
     const qmap = new Map();
     for (let index = 0; index < qdata.questions.length; index++) {
         qmap.set(`${qdata.questions[index].qID}`, index);
     }
-
 
     //--- Buttons Configuration
     const clr = document.getElementById('clr');
@@ -66,7 +64,7 @@ function init() {
                 optiontext.set(currentOID, selected);
             }
         }
-        if(nextqID == null) {
+        if(!nextqID) {
             showResults();
         } else {
             iterate(nextqID);
