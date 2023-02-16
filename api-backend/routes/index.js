@@ -64,6 +64,11 @@ router
     .all(methodNotAllowed);
 
 router
+    .route("/intelliq_api/stats")
+    .get(controllers.user.stats)
+    .all(methodNotAllowed);
+
+router
     .route("/intelliq_api/question/:questionnaireID/:questionID")
     .get(controllers.user.question)
     .all(methodNotAllowed);

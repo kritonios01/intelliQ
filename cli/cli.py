@@ -280,6 +280,23 @@ def keywords(format):
 			for keyword in json_data:
 				print(f'{keyword["keywordID"]}: {keyword["keywordText"]}')
 
+@main.command(short_help='Returns system usage statistics')
+@click.option('--format', required=True, type=click.Choice(['json','csv']))
+def stats(format):
+	'''Returns general system usage statistics'''
+
+	click.echo('Fetching stats..')
+	response = http.get(f'{get_base_url()}/stats?format={format}')
+	if response.status_code != 200:
+		click.echo(f"Error retrieving data (Code: {response.status_code})")
+	else:
+		if(format=='csv'):
+			print(parse_csv(response.text))
+		else:
+			json_data=response.json()
+			for key in json_data:
+				print(f'{key} --> {json_data[key]}')
+
 @main.command(short_help='Selects the API server to use for queries')
 @click.option('--host', prompt=True, required=True, type=click.Choice(['api.intelliq.site:443','localhost:9103']))
 def select_server(host):

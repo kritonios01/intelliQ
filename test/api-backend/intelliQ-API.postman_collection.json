@@ -134,7 +134,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"postman.setNextRequest(\"Delete Questionnaire\");"
+									"postman.setNextRequest(\"Get Statistics\");"
 								],
 								"type": "text/javascript"
 							}
@@ -573,6 +573,40 @@
 								{
 									"key": "questionID",
 									"value": "{{test_questionID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Statistics",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(\"Delete Questionnaire\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stats?format={{response_format}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stats"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "{{response_format}}"
 								}
 							]
 						}

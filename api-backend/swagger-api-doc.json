@@ -4,7 +4,7 @@
     "description" : "Live Demo Server",
     "url" : "https://api.intelliq.site/intelliq_api"
   }, {
-    "description" : "Docker Server",
+    "description" : "Local Server",
     "url" : "https://localhost:9103/intelliq_api"
   } ],
   "info" : {
@@ -404,6 +404,81 @@
         }
       }
     },
+    "/stats" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets usage statistics",
+        "operationId" : "stats",
+        "description" : "Returns general usage statistics",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "format",
+          "description" : "Response data format",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "json", "csv" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistics successfully fetched",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    },
+                    "counts" : {
+                      "type" : "object",
+                      "properties" : {
+                        "questionnaires" : {
+                          "type" : "integer",
+                          "example" : 1
+                        },
+                        "keywords" : {
+                          "type" : "integer",
+                          "example" : 1
+                        },
+                        "questions" : {
+                          "type" : "integer",
+                          "example" : 1
+                        },
+                        "options" : {
+                          "type" : "integer",
+                          "example" : 1
+                        },
+                        "answers" : {
+                          "type" : "integer",
+                          "example" : 1
+                        },
+                        "sessions" : {
+                          "type" : "integer",
+                          "example" : 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/csv" : { }
+            }
+          },
+          "204" : {
+            "description" : "no data"
+          },
+          "400" : {
+            "description" : "request error"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
     "/question/{questionnaireID}/{questionID}" : {
       "get" : {
         "tags" : [ "user" ],
@@ -538,7 +613,7 @@
     "/newsession/{questionnaireID}" : {
       "post" : {
         "tags" : [ "user" ],
-        "summary" : "Create a new session",
+        "summary" : "Creates a new session",
         "operationId" : "newsession",
         "description" : "Creates and returns a new session for answering a questionnaire",
         "parameters" : [ {
@@ -722,7 +797,7 @@
                     },
                     "questionID" : {
                       "type" : "string",
-                      "example" : "S0"
+                      "example" : "Q00"
                     },
                     "answers" : {
                       "type" : "array",

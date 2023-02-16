@@ -1,4 +1,4 @@
-const { Parser } = require('json2csv');
+const { Parser } = require(`json2csv`);
 
 const errors = require(`../errors`);
 const pool = require(`../services/database`);
@@ -127,6 +127,56 @@ exports.keywords = async (req, res, next) => {
     }
 };
 
+/*
+    Endpoint Implementation
+    Resource URL: /stats
+    Supported Methods: GET
+
+    Returns general usage statistics
+*/
+exports.stats = async (req, res, next) => {
+    let conn, resdata;
+
+    try {
+        conn = await pool.getConnection();
+
+        const questionnaire_count = Number((await conn.query(`SELECT COUNT(*) FROM questionnaires;`))[0]["COUNT(*)"]);
+        const keyword_count = Number((await conn.query(`SELECT COUNT(*) FROM keywords;`))[0]["COUNT(*)"]);
+        const question_count = Number((await conn.query(`SELECT COUNT(*) FROM questions;`))[0]["COUNT(*)"]);
+        const option_count = Number((await conn.query(`SELECT COUNT(*) FROM options;`))[0]["COUNT(*)"]);
+        const answer_count = Number((await conn.query(`SELECT COUNT(*) FROM answers;`))[0]["COUNT(*)"]);
+        const session_count = Number((await conn.query(`SELECT COUNT(*) FROM sessions;`))[0]["COUNT(*)"]);
+
+        resdata = {
+            status: "OK",
+            counts: {
+                questionnaires: questionnaire_count,
+                keywords: keyword_count,
+                questions: question_count,
+                options: option_count,
+                answers: answer_count,
+                sessions: session_count
+            },
+        }
+    } catch(err) {
+        return next(err);
+    } finally {
+        if(resdata) {
+            if(req.query.format == `csv`) {
+                resdata.counts.status = resdata.status;
+                
+                const parser = new Parser(Object.keys(resdata.counts));
+
+                res.type(`text/csv`);
+                res.send(parser.parse(resdata.counts));
+            } else {
+                res.status(200).json(resdata);
+            }
+        } else res.status(204).send();
+
+        if(conn) conn.end();
+    }
+};
 
 /*
     Endpoint Implementation
