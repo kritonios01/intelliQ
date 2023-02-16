@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,41 +9,43 @@
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="icon" type="image/x-icon" href="./assets/images/favicon.ico">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg mynav">
         <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <a class="navbar-brand" style="font-size: 30px;" href="index.html"><b>Intelliq</b></a>
-            <div class="navbar-nav">
-                <a class="nav-link navfont" href="questionnaires.html">Questionnaires</a>
-                <a class="nav-link navfont" href="about.html">About</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <a class="navbar-brand" style="font-size: 30px;" href="index.html"><b>Intelliq</b></a>
+                <div class="navbar-nav">
+                    <a class="nav-link navfont" href="questionnaires.html">Questionnaires</a>
+                    <a class="nav-link navfont" href="about.html">About</a>
+                </div>
             </div>
-        </div>
         </div>
     </nav>
     <h3 class="display-5 homepar">Please select a Questionnaire from the list!</h3>
     <div class="mcontainer loader centered qcontainer"></div>
     <div id="loaded" style="display: none;">
-    <form id="form">
-    <table style="font-size: x-large;" class="table">
-      <thead>
-        <tr>
-          <th scope="col">Select</th>
-          <th scope="col">Questionnaire ID</th>
-          <th scope="col">Questionnaire Title</th>
-        </tr>
-      </thead>
-      
-      <tbody id="questn">
+        <form style="width: 100vw;" id="form">
+            <table style="font-size: x-large;" class="table">
+                <thead>
+                    <tr style="width: 100%;">
+                        <th scope="col">Select</th>
+                        <th scope="col">Questionnaire ID</th>
+                        <th scope="col">Questionnaire Title</th>
+                    </tr>
+                </thead>
 
-      </tbody>
-    </table>
-    <div class="centered">
-    <button id="sbt" type="sumbit" disabled  class="btn btn-primary homebutton">Go!</button>
+                <tbody id="questn">
+
+                </tbody>
+            </table>
+            <div class=" centered">
+                <button id="sbt" type="sumbit" disabled class="btn btn-primary homebutton">Go!</button>
+            </div>
+        </form>
     </div>
-    </form>
-  </div>
     <script type="module" src="./assets/javascript/questionnaires.js"></script>
     <script src="./assets/bootjs/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

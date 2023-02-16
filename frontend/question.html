@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,38 +9,57 @@
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="icon" type="image/x-icon" href="./assets/images/favicon.ico">
     <script type="text/javascript">
-        window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);
+        window.addEventListener('keydown', function(e) {
+            if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
+                if (e.target.nodeName == 'INPUT' && e.target.type == 'text') {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        }, true);
+    </script>
+    <script type="text/javascript">
+        window.addEventListener('keydown', function(e) {
+            if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
+                if (e.target.nodeName == 'INPUT' && e.target.type == 'text') {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        }, true);
     </script>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg mynav">
         <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <a class="navbar-brand" style="font-size: 30px;" href="index.html"><b>Intelliq</b></a>
-            <div class="navbar-nav">
-                <a class="nav-link navfont" href="questionnaires.html">Questionnaires</a>
-                <a class="nav-link navfont" href="about.html">About</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <a class="navbar-brand" style="font-size: 30px;" href="index.html"><b>Intelliq</b></a>
+                <div class="navbar-nav">
+                    <a class="nav-link navfont" href="questionnaires.html">Questionnaires</a>
+                    <a class="nav-link navfont" href="about.html">About</a>
+                </div>
             </div>
-        </div>
         </div>
     </nav>
     <div class="loader mycontainer qcontainer"></div>
 
-        <div id="loaded" style="display: none;" class="mycontainer qcontainer">
-            <div id="questionnaire"class="justify-center flex-column">
-                <h3 id="question"></h3>
-                <form id="myform">
-                    <div style="font-size: x-large;"  id="option-container">   
-                    </div>
-                    <div class=" flex-row" style="margin-top:10px">
-                        <button id='clr' type="reset" class="btn btn-primary homebutton">Clear</button>
-                        <button id='skip' class="btn btn-primary homebutton" style="margin-left: 10px;">Skip</button>
-                        <button id='sbt'type="submit" disabled class="btn btn-primary homebutton" style="margin-left: 10px;">Next</button>
-                    </div>
-                </form>
+    <div id="loaded" style="display: none;" class="mycontainer qcontainer">
+        <div id="questionnaire" class="justify-center flex-column">
+            <h3 id="question"></h3>
+            <form id="myform">
+                <div style="font-size: x-large;" id="option-container">
                 </div>
+                <div class=" flex-row" style="margin-top:10px">
+                    <button id='clr' type="reset" class="btn btn-primary homebutton">Clear</button>
+                    <button id='skip' class="btn btn-primary homebutton" style="margin-left: 10px;">Skip</button>
+                    <button id='sbt' type="submit" disabled class="btn btn-primary homebutton" style="margin-left: 10px;">Next</button>
+                </div>
+            </form>
         </div>
-        <button id='result' class=" text-centered btn-centered btn btn-primary homebutton">Finish!</button>
+    </div>
+    <button id='result' class=" text-centered btn-centered btn btn-primary homebutton">Finish!</button>
     <script type="module" src="./assets/javascript/question.js"></script>
 </body>
+
 </html>

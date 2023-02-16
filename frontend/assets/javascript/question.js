@@ -21,158 +21,157 @@ const loaded = document.querySelector("#loaded");
 
 getquestions(questionURL);
 
-async function getquestions(url){
+async function getquestions(url) {
     const res = await fetch(url);
     const data = await res.json();
     qdata = data;
     getoptions();
 }
-async function getoptions(){
-    for(let index = 0;index < qdata.questions.length;index++){
+async function getoptions() {
+    for (let index = 0; index < qdata.questions.length; index++) {
         const res = await fetch(`https://api.intelliq.site/intelliq_api/question/${questionnaireID}/${qdata.questions[index].qID}`);
         const data = await res.json();
         qdata.questions[index].options = data.options;
     }
-    loader.style.display="none"
-    loaded.style.display="flex"
+    loader.style.display = "none"
+    loaded.style.display = "flex"
     init()
 }
 //---Initializing function
 
-function init(){
+function init() {
     console.log(qdata);
     let currentqID = qdata.questions[0].qID;
-    let currentOID= null;
-    let selected =null;
-    let nextqID =null;
+    //let currentOID= null;
+    let selected = null;
+    let nextqID = null;
     const qmap = new Map();
     for (let index = 0; index < qdata.questions.length; index++) {
-        qmap.set(`${qdata.questions[index].qID}`,index);
+        qmap.set(`${qdata.questions[index].qID}`, index);
     }
 
 
-//--- Buttons Configuration
+    //--- Buttons Configuration
 
-    const clr= document.getElementById('clr');
-    clr.addEventListener('click', () =>{
-        document.getElementById('sbt').setAttribute("disabled","disabled");
+    const clr = document.getElementById('clr');
+    clr.addEventListener('click', () => {
+        document.getElementById('sbt').setAttribute("disabled", "disabled");
     });
 
-//--- Adding Event Listener for sumbiting
+    //--- Adding Event Listener for sumbiting
     const myform = document.getElementById('myform');
-    myform.addEventListener('submit',function(e){
+    myform.addEventListener('submit', function(e) {
         e.preventDefault();
         let id = qmap.get(currentqID);
-        answer.set(currentqID,selected);
+        answer.set(currentqID, selected);
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
-            if(qdata.questions[id].options[index].opttxt=='<open string>' && !optiontext.has(selected)){
-                optiontext.set(selected,selected);
+            if (qdata.questions[id].options[index].opttxt == '<open string>' && !optiontext.has(selected)) {
+                optiontext.set(selected, selected);
             }
         }
-        if(nextqID=='null'){
+        if (nextqID == 'null') {
             showResults();
-        }else{
+        } else {
             iterate(nextqID);
         }
     });
 
-//--- Show Results Function
-    function showResults(){
-        console.log(optiontext);
-        console.log(answer);
-        const resultdiv=document.getElementById('questionnaire');
+    //--- Show Results Function
+    function showResults() {
+        const resultdiv = document.getElementById('questionnaire');
         resultdiv.innerHTML = `<ul id="results"></ul>`
         const mylist = document.getElementById('results');
-        const iter=answer.entries();
-        let ivalue=iter.next();
-        while(!ivalue.done){
+        const iter = answer.entries();
+        let ivalue = iter.next();
+        while (!ivalue.done) {
             const id = qmap.get(ivalue.value[0]);
             const text = qdata.questions[id].qtext;
             const otext = optiontext.get(ivalue.value[1]);
-            mylist.innerHTML +=`<li class="display-flex"><h4>${text}<h4> -> <h3 style="color: #0f420e;">${otext}</h3></li>`
-            ivalue=iter.next();
+            mylist.innerHTML += `<li class="display-flex"><h4>${text}<h4> -> <h3 style="color: #0f420e;">${otext}</h3></li>`
+            ivalue = iter.next();
         }
-        resultButton.style.display="flex";
-        resultButton.addEventListener('click', e=>{
+        resultButton.style.display = "flex";
+        resultButton.addEventListener('click', e => {
             e.preventDefault;
-            const iterator=answer.entries();
-            let results=iterator.next();
-            while(!results.done){
-                const sessionURL=`https://api.intelliq.site/intelliq_api/doanswer/${questionnaireID}/${results.value[0]}/${session}/${results.value[1]}`
-                fetch(sessionURL, {method: 'POST'})
-                .then(res => res.json())
-                .then(data=> console.log(data)) 
-                .then(results=iterator.next())
-                .then( document.location.href="./index.html")
+            const iterator = answer.entries();
+            let results = iterator.next();
+            while (!results.done) {
+                const sessionURL = `https://api.intelliq.site/intelliq_api/doanswer/${questionnaireID}/${results.value[0]}/${session}/${results.value[1]}`
+                fetch(sessionURL, { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .then(results = iterator.next())
             }
+            document.location.href = "./index.html"
+            alert("Thank you for asnwering!")
         })
     }
-    
-//--- Get Answers Function
-    function getAnswer(qid){
-        currentqID=qid;
-        let selectedOptions=null;
+
+    //--- Get Answers Function
+    function getAnswer(qid) {
+        currentqID = qid;
+        let selectedOptions = null;
         selectedOptions = document.getElementsByName('questionID');
-        for(var radio of selectedOptions){
-            if(radio.type=='text'){
-                radio.addEventListener('keyup',()=>{
-                    const txt= document.getElementsByName('questionID').value;
-                    if(txt!=""){
+        for (var radio of selectedOptions) {
+            if (radio.type == 'text') {
+                radio.addEventListener('keyup', () => {
+                    const txt = document.getElementsByName('questionID').value;
+                    if (txt != "") {
                         document.getElementById('sbt').removeAttribute("disabled");
-                    }else{
-                        document.getElementById('sbt').setAttribute("disabled","disabled");
+                    } else {
+                        document.getElementById('sbt').setAttribute("disabled", "disabled");
                     }
                 })
             }
-            radio.addEventListener('input',function(event){
+            radio.addEventListener('input', function(event) {
                 event.preventDefault();
-                selected=event.target.value;
-                if(event.target.type!='text'){
-                    optiontext.set(selected,event.target.getAttribute("opttxt"));
-                    currentOID=selected;
-                }else{
-                    currentOID=event.target.getAttribute("optid");
+                selected = event.target.value;
+                if (event.target.type != 'text') {
+                    optiontext.set(selected, event.target.getAttribute("opttxt"));
+                    //currentOID=selected;
+                } else {
+                    //currentOID=event.target.getAttribute("optid");
                 }
                 document.getElementById('sbt').removeAttribute("disabled");
-                nextqID=event.target.getAttribute("nextqid");
+                nextqID = event.target.getAttribute("nextqid");
             })
         }
     }
-//---Render Questions
+    //---Render Questions
 
-    function iterate(qid){
+    function iterate(qid) {
         let id = qmap.get(qid);
-        document.getElementById('sbt').setAttribute("disabled","disabled");
+        document.getElementById('sbt').setAttribute("disabled", "disabled");
         question.innerText = qdata.questions[id].qtext;
         const showoptions = document.getElementById("option-container");
-        showoptions.innerHTML="";
-        if(qdata.questions[id].required=='FALSE'){
+        showoptions.innerHTML = "";
+        if (qdata.questions[id].required == 'FALSE') {
             const skip = document.getElementById('skip');
-            skip.style.display="flex";
-            skip.addEventListener('click',event=>{
+            skip.style.display = "flex";
+            skip.addEventListener('click', event => {
                 event.preventDefault();
                 for (let index = 0; index < qdata.questions[id].options.length; index++) {
-                    if(qdata.questions[id].options[index].nextqID ==null){
+                    if (qdata.questions[id].options[index].nextqID == null) {
                         showResults();
-                    }else{
-                        iterate(qdata.questions[id+1].qID);
+                    } else {
+                        iterate(qdata.questions[id + 1].qID);
                     }
                 }
             });
         }
-            for (let index = 0; index < qdata.questions[id].options.length; index++) {
-                if(qdata.questions[id].options[index].opttxt=='<open string>'){
-                    showoptions.innerHTML += `
+        for (let index = 0; index < qdata.questions[id].options.length; index++) {
+            if (qdata.questions[id].options[index].opttxt == '<open string>') {
+                showoptions.innerHTML += `
                     <input type="text" optid="${qdata.questions[id].options[index].optID}" nextqid="${qdata.questions[id].options[0].nextqID}" name="questionID">
                     `
-                }else{    
+            } else {
                 showoptions.innerHTML += `
                 <input type="radio" opttxt="${qdata.questions[id].options[index].opttxt}" nextqid="${qdata.questions[id].options[index].nextqID}" id="${index}" name="questionID" value="${qdata.questions[id].options[index].optID}">
                 <label for="${index}">${qdata.questions[id].options[index].opttxt}</label><br>
                 `
-                }
             }
-        
+        }
+
         getAnswer(qid);
     }
     //--- Start
