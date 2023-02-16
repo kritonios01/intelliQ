@@ -74,7 +74,7 @@
 					"nextqID": "Q03"
 				},
 				{
-					"optID": "Q00A2", 
+					"optID": "Q00A3", 
 					"opttxt": "Όχι, αν και θα ήθελα να ταξιδεύω περισσότερο", 
 					"nextqID": "Q04"
 				}
@@ -97,7 +97,7 @@
 					"nextqID": "Q02"
 				},
 				{
-					"optID": "Q01A2", 
+					"optID": "Q01A3", 
 					"opttxt": "<open string>", 
 					"nextqID": "Q02"
 				}
