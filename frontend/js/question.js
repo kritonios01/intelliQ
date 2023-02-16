@@ -147,7 +147,17 @@ function init() {
     function iterate(qid) {
         let id = qmap.get(qid);
         document.getElementById('sbt').setAttribute("disabled", "disabled");
-        question.innerText = qdata.questions[id].qtext;
+
+        let rendered_text = qdata.questions[id].qtext;
+        for(let i = 0; i < qdata.questions.length; i++) {
+            rendered_text = rendered_text.replace("[*" + qdata.questions[i].qID + "]", "\"" + qdata.questions[i].qtext + "\"");
+
+            for(let j = 0; j < qdata.questions[i].options.length; j++) {
+                rendered_text = rendered_text.replace("[*" + qdata.questions[i].options[j].optID + "]", "\"" + qdata.questions[i].options[j].opttxt + "\"");
+            }
+        }
+
+        question.innerText = rendered_text;
         const showoptions = document.getElementById("option-container");
         showoptions.innerHTML = "";
         if (qdata.questions[id].required == 'FALSE') {
