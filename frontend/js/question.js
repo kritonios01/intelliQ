@@ -64,7 +64,7 @@ function init() {
                 optiontext.set(currentOID, selected);
             }
         }
-        if(!nextqID) {
+        if(nextqID == 'null') {
             showResults();
         } else {
             iterate(nextqID);
