@@ -23,16 +23,36 @@
         </div>
     </nav>
     <div class=" container homepar">
-        <img src="img/logo.png" style="max-width: 45%; height: auto;">
-        <h4>Intelligent Questionnaires!</h4>
-        <h4>Project for Software Engineering Class</h4>
-        <h4>National Technical University of Athens</h4>
-        <h4>School of Electrical and Computer Engineering</h4>
-        <h4>©2022-2023 All Rights Reserved</h4>
-        <img src="img/ece.png" style="max-width: 10%; height: auto;" alt="ECE logo!">
-
-    </div>
-    
+        <div class="mcontainer loader centered qcontainer"></div>
+        <div id="loaded" style="display: none;">
+            <table style="font-size: large;" class="table">  
+                <tr>
+                    <th scope="col">Questionnaires</th>
+                    <td style="width: 50%;" id="td1" scope="col"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Keywords</th>
+                    <td id="td2" scope="col"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Questions</th>
+                    <td id="td3"scope="col"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Options</th>
+                    <td id="td4"scope="col"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Answers</th>
+                    <td id="td5"scope="col"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Sessions</th>
+                    <td id="td6"scope="col"></td>
+                </tr>
+            </table>
+        </div>
+    <script type="module" src="js/stats.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
 </body>
