@@ -40,7 +40,6 @@ async function getoptions() {
 
 //--- Init function
 function init() {
-    console.log(qdata)
     let currentqID = qdata.questions[0].qID;
     let currentOID = null;
     let selected = null;
@@ -62,7 +61,6 @@ function init() {
         e.preventDefault();
         skip.style.display = "none";
         let id = qmap.get(currentqID);
-        console.log(currentqID, "---->", currentOID);
         answer.set(currentqID, currentOID);
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
             if (qdata.questions[id].options[index].opttxt == '<open string>' && !optiontext.has(selected)) {
@@ -72,7 +70,6 @@ function init() {
         if (nextqID == 'null') {
             showResults();
         } else {
-            console.log("ALL GUCCI")
             iterate(nextqID);
         }
     });
@@ -80,10 +77,9 @@ function init() {
     //--- Shows results
     function showResults() {
         const resultdiv = document.getElementById('questionnaire');
-        resultdiv.innerHTML = `<ul id="results"></ul>`
+        resultdiv.style.marginTop = "10%"
+        resultdiv.innerHTML = `<table style="border:solid; font-size: large;" class="table" id="results"></ul>`
         const mylist = document.getElementById('results');
-        console.log(answer)
-        console.log(optiontext)
         const iter = answer.entries();
         let ivalue = iter.next();
         while (!ivalue.done) {
@@ -103,9 +99,14 @@ function init() {
             }
 
             const otext = optiontext.get(ivalue.value[1]);
-            mylist.innerHTML += `<li class="display-flex"><h4>${text}<h4> -> <h3 style="color: #0f420e;">${otext}</h3></li>`
+            mylist.innerHTML += `
+            <tr>
+                <th scope="col">${text}</th>
+                <td style="width: 50%;"  scope="col">${otext}</td>
+            </tr>`
             ivalue = iter.next();
         }
+        resultButton.style.marginTop = "10%";
         resultButton.style.display = "flex";
         resultButton.addEventListener('click', e => {
             e.preventDefault();
@@ -125,7 +126,6 @@ function init() {
 
     //--- Gets answers
     function getAnswer(qid) {
-        console.log("Changing CurrentID. Old qid===", currentqID, "New qid===", qid);
         currentqID = qid;
         let selectedOptions = null;
         selectedOptions = document.getElementsByName('questionID');
@@ -134,7 +134,6 @@ function init() {
                 radio.addEventListener('keyup', () => {
                     const txt = document.getElementsByName('questionID').value;
                     if (txt != "") {
-                        console.log("please submite")
                         document.getElementById('sbt').removeAttribute("disabled");
                     } else {
                         document.getElementById('sbt').setAttribute("disabled", "disabled");
@@ -159,7 +158,6 @@ function init() {
     //--- Render questions
     function iterate(qid) {
         let id = qmap.get(qid);
-        console.log(id)
         document.getElementById('sbt').setAttribute("disabled", "disabled");
 
         let rendered_text = qdata.questions[id].qtext;
@@ -195,13 +193,11 @@ function init() {
             skip.style.display = "flex";
             skip.addEventListener('click', event => {
                 event.preventDefault();
-                console.log(event.target)
                 for (let index = 0; index < qdata.questions[id].options.length; index++) {
                     if (qdata.questions[id].options[index].nextqID == null) {
                         showResults();
                     } else {
                         isSkipped = true;
-                        console.log("First")
                         skip.style.display = "none";
                         iterate(qdata.questions[id + 1].qID);
                     }
@@ -213,6 +209,5 @@ function init() {
     }
 
     //--- Start
-    console.log("STARTING MAIN")
     iterate(currentqID);
 }
