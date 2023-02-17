@@ -10,6 +10,7 @@ const question = document.getElementById("question");
 const resultButton = document.getElementById('result');
 const skip = document.getElementById('skip');
 let qdata;
+let isSkipped;
 const answer = new Map();
 const optiontext = new Map();
 
@@ -39,6 +40,7 @@ async function getoptions() {
 
 //--- Init function
 function init() {
+    console.log(qdata)
     let currentqID = qdata.questions[0].qID;
     let currentOID = null;
     let selected = null;
@@ -56,19 +58,21 @@ function init() {
 
     //--- Event listener for sumbiting
     const myform = document.getElementById('myform');
-    myform.addEventListener('submit', function (e) {
+    myform.addEventListener('submit', function(e) {
         e.preventDefault();
         skip.style.display = "none";
         let id = qmap.get(currentqID);
+        console.log(currentqID, "---->", currentOID);
         answer.set(currentqID, currentOID);
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
             if (qdata.questions[id].options[index].opttxt == '<open string>' && !optiontext.has(selected)) {
                 optiontext.set(currentOID, selected);
             }
         }
-        if(nextqID == 'null') {
+        if (nextqID == 'null') {
             showResults();
         } else {
+            console.log("ALL GUCCI")
             iterate(nextqID);
         }
     });
@@ -78,6 +82,8 @@ function init() {
         const resultdiv = document.getElementById('questionnaire');
         resultdiv.innerHTML = `<ul id="results"></ul>`
         const mylist = document.getElementById('results');
+        console.log(answer)
+        console.log(optiontext)
         const iter = answer.entries();
         let ivalue = iter.next();
         while (!ivalue.done) {
@@ -102,7 +108,7 @@ function init() {
         }
         resultButton.style.display = "flex";
         resultButton.addEventListener('click', e => {
-            e.preventDefault;
+            e.preventDefault();
             const iterator = answer.entries();
             let results = iterator.next();
             while (!results.done) {
@@ -113,12 +119,13 @@ function init() {
             }
 
             alert("Thanks for answering!")
-            setTimeout(function () { window.location.href = ".."; }, 1000);
+            setTimeout(function() { window.location.href = ".."; }, 1000);
         })
     }
 
     //--- Gets answers
     function getAnswer(qid) {
+        console.log("Changing CurrentID. Old qid===", currentqID, "New qid===", qid);
         currentqID = qid;
         let selectedOptions = null;
         selectedOptions = document.getElementsByName('questionID');
@@ -127,13 +134,14 @@ function init() {
                 radio.addEventListener('keyup', () => {
                     const txt = document.getElementsByName('questionID').value;
                     if (txt != "") {
+                        console.log("please submite")
                         document.getElementById('sbt').removeAttribute("disabled");
                     } else {
                         document.getElementById('sbt').setAttribute("disabled", "disabled");
                     }
                 })
             }
-            radio.addEventListener('input', function (event) {
+            radio.addEventListener('input', function(event) {
                 event.preventDefault();
                 selected = event.target.value;
                 if (event.target.type != 'text') {
@@ -151,6 +159,7 @@ function init() {
     //--- Render questions
     function iterate(qid) {
         let id = qmap.get(qid);
+        console.log(id)
         document.getElementById('sbt').setAttribute("disabled", "disabled");
 
         let rendered_text = qdata.questions[id].qtext;
@@ -170,19 +179,6 @@ function init() {
         question.innerText = rendered_text;
         const showoptions = document.getElementById("option-container");
         showoptions.innerHTML = "";
-        if (qdata.questions[id].required == 'FALSE') {
-            skip.style.display = "flex";
-            skip.addEventListener('click', event => {
-                for (let index = 0; index < qdata.questions[id].options.length; index++) {
-                    if (qdata.questions[id].options[index].nextqID == null) {
-                        showResults();
-                    } else {
-                        skip.style.display = "none";
-                        iterate(qdata.questions[id + 1].qID);
-                    }
-                }
-            });
-        }
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
             if (qdata.questions[id].options[index].opttxt == '<open string>') {
                 showoptions.innerHTML += `
@@ -195,10 +191,28 @@ function init() {
                 `
             }
         }
-
+        if (qdata.questions[id].required == 'FALSE') {
+            skip.style.display = "flex";
+            skip.addEventListener('click', event => {
+                event.preventDefault();
+                console.log(event.target)
+                for (let index = 0; index < qdata.questions[id].options.length; index++) {
+                    if (qdata.questions[id].options[index].nextqID == null) {
+                        showResults();
+                    } else {
+                        isSkipped = true;
+                        console.log("First")
+                        skip.style.display = "none";
+                        iterate(qdata.questions[id + 1].qID);
+                    }
+                }
+            });
+        }
         getAnswer(qid);
+
     }
 
     //--- Start
+    console.log("STARTING MAIN")
     iterate(currentqID);
 }
