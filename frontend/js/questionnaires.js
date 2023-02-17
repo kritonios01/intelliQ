@@ -2,7 +2,7 @@ import config from "./config/config.js";
 
 const questionnnaireURL = `${config.api.base_url}/questionnaires`;
 const dataConst = document.querySelector("#questn");
-
+const mainMessage = document.getElementById('pick');
 //--- Loader
 const loader = document.querySelector(".loader");
 const loaded = document.querySelector("#loaded");
@@ -12,7 +12,14 @@ fetcher();
 
 function fetcher() {
     fetch(questionnnaireURL)
-        .then((res) => res.json())
+        .then((res) => {
+            if (res.status == 204) {
+                loader.style.display = "none";
+                mainMessage.innerText = "No Questionnaires Available"
+            } else {
+                res.json()
+            }
+        })
         .then((data) => {
             toHTML(data);
             loader.style.display = "none";
@@ -46,10 +53,11 @@ function enableBtn() {
     );
 }
 
+
 //--- Create new session for selected questionnaire and redirect user
 let selectedID;
 const myform = document.getElementById("form");
-myform.addEventListener("submit", function (e) {
+myform.addEventListener("submit", function(e) {
     e.preventDefault();
     const questionnaires = document.getElementsByName("questionnaireID");
     for (var radio of questionnaires) {
@@ -62,6 +70,6 @@ myform.addEventListener("submit", function (e) {
         .then((res) => res.json())
         .then(
             (data) =>
-                (document.location.href = `../questionnaire?questionnaireID=${selectedID}&session=${data.session}`)
+            (document.location.href = `../questionnaire?questionnaireID=${selectedID}&session=${data.session}`)
         );
 });
