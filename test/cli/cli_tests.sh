@@ -12,21 +12,28 @@ se2226 questionnaire --questionnaire_id QQ001 --format csv
 echo "Press any key to continue..."
 read x
 
+echo -e "NEWSESSION \n"
+sleep 0.5
+session=$(curl -X 'POST' 'https://api.intelliq.site/intelliq_api/newsession/QQ001?format=json' | jq '.session')
+session="${session//\"/}" #with this we remove double quotes from session content
+echo "Press any key to continue..."
+read x
+
 echo -e "DOANSWER TEST \n"
 sleep 0.5
-se2226 doanswer --questionnaire_id QQ001 --question_id P00 --session_id  --option_id P00A2 --format json
+se2226 doanswer --questionnaire_id QQ001 --question_id P00 --session_id $session --option_id P00A2 --format json
 echo "Press any key to continue..."
 read x
-se2226 doanswer --questionnaire_id QQ001 --question_id P02 --session_id  --option_id P02A1 --format json
+se2226 doanswer --questionnaire_id QQ001 --question_id P02 --session_id $session --option_id P02A1 --format json
 echo "Press any key to continue..."
 read x
-se2226 doanswer --questionnaire_id QQ001 --question_id Q00 --session_id  --option_id Q00A1 --format json
+se2226 doanswer --questionnaire_id QQ001 --question_id Q00 --session_id $session --option_id Q00A1 --format json
 echo "Press any key to continue..."
 read x
-se2226 doanswer --questionnaire_id QQ001 --question_id Q01 --session_id  --option_id Q01A4 --format json
+se2226 doanswer --questionnaire_id QQ001 --question_id Q01 --session_id $session --option_id Q01A4 --format json
 echo "Press any key to continue..."
 read x
-se2226 doanswer --questionnaire_id QQ001 --question_id Q02 --session_id  --option_id Q02A5 --format json
+se2226 doanswer --questionnaire_id QQ001 --question_id Q02 --session_id $session --option_id Q02A5 --format json
 echo "Press any key to continue..."
 read x
 
@@ -44,7 +51,7 @@ read x
 
 echo -e "QUESTIONNAIRE-UPD TEST \n"
 sleep 0.5
-se2226 questionnaire-upd --source ../post-files/questionnaire_upd/questionnaire2.json --format json
+se2226 questionnaire-upd --source ../post-files/questionnaire_upd/questionnaire_2.json --format json
 echo "Press any key to continue..."
 read x
 
