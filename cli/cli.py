@@ -17,7 +17,7 @@ from tabulate import tabulate
 from urllib3.exceptions import InsecureRequestWarning
 
 # Suppress InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+http.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 # Stores the absolute path of the directory containing the script
 script_path = os.path.dirname(os.path.realpath(__file__))
