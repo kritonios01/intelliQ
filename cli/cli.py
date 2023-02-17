@@ -47,7 +47,7 @@ def healthcheck(format):
 	'''Checks the connection status of the API application to the database server'''
 
 	click.echo('Checking API connection to the database..')
-	response=http.get(f'{get_base_url()}/admin/healthcheck?format={format}')
+	response=http.get(f'{get_base_url()}/admin/healthcheck?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -64,7 +64,7 @@ def resetall(format):
 	'''Resets the system by removing all data from the database'''
 
 	click.echo('Resetting..')
-	response=http.post(f'{get_base_url()}/admin/resetall?format={format}')
+	response=http.post(f'{get_base_url()}/admin/resetall?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
@@ -84,7 +84,7 @@ def questionnaire_upd(source, format):
 	try:
 		file = {'file': ('file.json', open(source,'r',encoding='utf-8'), 'application/json', {})}
 		click.echo('Uploading questionnaire data..')
-		response = http.post(f'{get_base_url()}/admin/questionnaire_upd?format={format}', files=file)
+		response = http.post(f'{get_base_url()}/admin/questionnaire_upd?format={format}', files=file, verify=False)
 		if response.status_code != 200:
 			click.echo(f"Error! (Code: {response.status_code})")
 		else:
@@ -104,7 +104,7 @@ def resetq(questionnaire_id, format):
 	'''Removes all answers given to a questionnaire from the system'''
 
 	click.echo('Resetting questionnaire..')
-	response=http.post(f'{get_base_url()}/admin/resetq/{questionnaire_id}?format={format}')
+	response=http.post(f'{get_base_url()}/admin/resetq/{questionnaire_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
@@ -122,7 +122,7 @@ def questionnaire(questionnaire_id, format):
 	'''Returns all data of a specific questionnaire'''
 
 	click.echo('Fetching questionnaire data..')
-	response = http.get(f'{get_base_url()}/questionnaire/{questionnaire_id}?format={format}')
+	response = http.get(f'{get_base_url()}/questionnaire/{questionnaire_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -146,7 +146,7 @@ def question(questionnaire_id, question_id, format):
 	'''Returns all data of a specific question'''
 
 	click.echo('Fetching question data..')
-	response = http.get(f'{get_base_url()}/question/{questionnaire_id}/{question_id}?format={format}')
+	response = http.get(f'{get_base_url()}/question/{questionnaire_id}/{question_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -171,7 +171,7 @@ def doanswer(questionnaire_id, question_id, session_id, option_id, format):
 	'''Submits an option as the answer given to a question during a specific session'''
 
 	click.echo('Submitting answer..')
-	response = http.post(f'{get_base_url()}/doanswer/{questionnaire_id}/{question_id}/{session_id}/{option_id}?format={format}')
+	response = http.post(f'{get_base_url()}/doanswer/{questionnaire_id}/{question_id}/{session_id}/{option_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -190,7 +190,7 @@ def getsessionanswers(questionnaire_id, session_id, format):
 	'''Returns the answers given to all of a questionnaire''s questions during a specific session'''
 
 	click.echo('Fetching answers..')
-	response = http.get(f'{get_base_url()}/getsessionanswers/{questionnaire_id}/{session_id}?format={format}')
+	response = http.get(f'{get_base_url()}/getsessionanswers/{questionnaire_id}/{session_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -209,7 +209,7 @@ def getquestionanswers(questionnaire_id, question_id, format):
 	'''Returns all answers ever given to a specific question over multiple sessions'''
 
 	click.echo('Fetching answers..')
-	response = http.get(f'{get_base_url()}/getquestionanswers/{questionnaire_id}/{question_id}?format={format}')
+	response = http.get(f'{get_base_url()}/getquestionanswers/{questionnaire_id}/{question_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -234,7 +234,7 @@ def questionnaires(keyword, format):
 	'''Lists all questionnaires in the system'''
 
 	click.echo('Fetching questionnaires..')
-	response = http.get(f'{get_base_url()}/questionnaires?format={format}' + (('&keyword=' + '&keyword='.join(keyword) if len(keyword) > 1 else '&keyword=' + keyword[0]) if len(keyword) > 0 else ''))
+	response = http.get(f'{get_base_url()}/questionnaires?format={format}' + (('&keyword=' + '&keyword='.join(keyword) if len(keyword) > 1 else '&keyword=' + keyword[0]) if len(keyword) > 0 else ''), verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -252,7 +252,7 @@ def newsession(questionnaire_id, format):
 	'''Creates a new session for the a questionnaire'''
 
 	click.echo('Creating session..')
-	response = http.post(f'{get_base_url()}/newsession/{questionnaire_id}?format={format}')
+	response = http.post(f'{get_base_url()}/newsession/{questionnaire_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -269,7 +269,7 @@ def keywords(format):
 	'''Lists all questionnaire keywords in the system'''
 
 	click.echo('Fetching keywords..')
-	response = http.get(f'{get_base_url()}/keywords?format={format}')
+	response = http.get(f'{get_base_url()}/keywords?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -286,7 +286,7 @@ def stats(format):
 	'''Returns general system usage statistics'''
 
 	click.echo('Fetching stats..')
-	response = http.get(f'{get_base_url()}/stats?format={format}')
+	response = http.get(f'{get_base_url()}/stats?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error retrieving data (Code: {response.status_code})")
 	else:
@@ -315,7 +315,7 @@ def deleteq(questionnaire_id, format):
 	'''Deletes a questionnaire from the system'''
 
 	click.echo('Deleting questionnaire..')
-	response=http.post(f'{get_base_url()}/admin/deleteq/{questionnaire_id}?format={format}')
+	response=http.post(f'{get_base_url()}/admin/deleteq/{questionnaire_id}?format={format}', verify=False)
 	if response.status_code != 200:
 		click.echo(f"Error! (Code: {response.status_code})")
 	else:
