@@ -10,15 +10,18 @@
     <link rel="icon" type="image/x-icon" href="../favicon/favicon.ico">
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-light" style="background-color: #7FC37E;">
+    <nav class="navbar navbar-dark navbar-expand-md">
         <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <a class="navbar-brand" href=".."><img src="../img/logo.png" style="width: 115px; height: auto; filter: brightness(0) invert(1);"></a>
-                <div class="navbar-nav">
-                    <a class="nav-link" href="../questionnaires">Questionnaires</a>
-                    <a class="nav-link" href="../stats">Stats</a>
-                    <a class="nav-link" href=".">About</a>
-                </div>
+            <a class="navbar-brand" href=".."><img class="img-fluid" src="../img/logo.png"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="../questionnaires">Questionnaires</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../stats">Stats</a></li>
+                    <li class="nav-item"><a class="nav-link active" href=".">About</a></li>
+                </ul>
             </div>
         </div>
     </nav>

@@ -2,6 +2,15 @@ body{
   margin: 0px;
   background-color: #c7cacf;
 }
+
+.navbar{
+  background-color:#7FC37E;
+}
+.navbar-brand img{
+  width:130px;
+  filter: brightness(0) invert(1);
+}
+
 .upperdiv{
   border: 0px;
   margin-top: 0px;
