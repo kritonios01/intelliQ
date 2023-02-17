@@ -1,9 +1,11 @@
+import config from "./config.js";
+
 //--- Initialize variables
 const queryString = window.location.search;
 const urlParam = new URLSearchParams(queryString);
 const questionnaireID = urlParam.get('questionnaireID');
 const session = urlParam.get('session');
-const questionURL = `https://api.intelliq.site/intelliq_api/questionnaire/${questionnaireID}`;
+const questionURL = `${config.api.base_url}/questionnaire/${questionnaireID}`;
 const question = document.getElementById("question");
 const resultButton = document.getElementById('result');
 const skip = document.getElementById('skip');
@@ -26,7 +28,7 @@ async function getquestions(url) {
 }
 async function getoptions() {
     for (let index = 0; index < qdata.questions.length; index++) {
-        const res = await fetch(`https://api.intelliq.site/intelliq_api/question/${questionnaireID}/${qdata.questions[index].qID}`);
+        const res = await fetch(`${config.api.base_url}/question/${questionnaireID}/${qdata.questions[index].qID}`);
         const data = await res.json();
         qdata.questions[index].options = data.options;
     }
@@ -104,7 +106,7 @@ function init() {
             const iterator = answer.entries();
             let results = iterator.next();
             while (!results.done) {
-                const sessionURL = `https://api.intelliq.site/intelliq_api/doanswer/${questionnaireID}/${results.value[0]}/${session}/${results.value[1]}`
+                const sessionURL = `${config.api.base_url}/doanswer/${questionnaireID}/${results.value[0]}/${session}/${results.value[1]}`
                 fetch(sessionURL, { method: 'POST' })
                     .then(res => res.json())
                     .then(results = iterator.next())

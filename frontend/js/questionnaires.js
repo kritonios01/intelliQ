@@ -1,5 +1,6 @@
-const questionnnaireURL =
-    "https://api.intelliq.site/intelliq_api/questionnaires";
+import config from "./config.js";
+
+const questionnnaireURL = `${config.api.base_url}/questionnaires`;
 const dataConst = document.querySelector("#questn");
 
 //--- Loader
@@ -56,7 +57,7 @@ myform.addEventListener("submit", function (e) {
             selectedID = radio.value;
         }
     }
-    const sessionURL = `https://api.intelliq.site/intelliq_api/newsession/${selectedID}`;
+    const sessionURL = `${config.api.base_url}/newsession/${selectedID}`;
     fetch(sessionURL, { method: "POST" })
         .then((res) => res.json())
         .then(

@@ -2,6 +2,9 @@ FROM httpd
 
 COPY . /usr/local/apache2/htdocs/
 
+# Use special app configuration for Docker container
+RUN mv -f js/config-docker.js js/config.js
+
 # Enable SSL in apache2 configuration
 RUN sed -i \
 		-e 's/^#\(Include .*httpd-ssl.conf\)/\1/' \
