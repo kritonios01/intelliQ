@@ -18,14 +18,15 @@ function fetcher() {
                 mainMessage.innerText = "No Questionnaires Available"
             } else {
                 res.json()
+                    .then((data) => {
+                        toHTML(data);
+                        loader.style.display = "none";
+                        loaded.style.display = "flex";
+                    })
+                    .then(enableBtn);
             }
         })
-        .then((data) => {
-            toHTML(data);
-            loader.style.display = "none";
-            loaded.style.display = "flex";
-        })
-        .then(enableBtn);
+
 }
 
 //--- Render HTML document
