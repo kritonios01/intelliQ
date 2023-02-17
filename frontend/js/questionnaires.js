@@ -1,4 +1,4 @@
-import config from "./config.js";
+import config from "./config/config.js";
 
 const questionnnaireURL = `${config.api.base_url}/questionnaires`;
 const dataConst = document.querySelector("#questn");
@@ -62,6 +62,6 @@ myform.addEventListener("submit", function (e) {
         .then((res) => res.json())
         .then(
             (data) =>
-                (document.location.href = `./question.html?questionnaireID=${selectedID}&session=${data.session}`)
+                (document.location.href = `../questionnaire?questionnaireID=${selectedID}&session=${data.session}`)
         );
 });

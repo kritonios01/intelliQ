@@ -1,4 +1,4 @@
-import config from "./config.js";
+import config from "./config/config.js";
 
 //--- Initialize variables
 const queryString = window.location.search;
@@ -113,7 +113,7 @@ function init() {
             }
 
             alert("Thanks for answering!")
-            setTimeout(function () { window.location.href = "index.html"; }, 1000);
+            setTimeout(function () { window.location.href = ".."; }, 1000);
         })
     }
 

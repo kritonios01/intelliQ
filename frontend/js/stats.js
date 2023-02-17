@@ -1,6 +1,6 @@
 //--- Endpooint config
 
-import config from "./config.js";
+import config from "./config/config.js";
 const statsURL = `${config.api.base_url}/stats`;
 let stats;
 
