@@ -10,6 +10,7 @@ const question = document.getElementById("question");
 const resultButton = document.getElementById('result');
 const skip = document.getElementById('skip');
 let qdata;
+let isSkipped;
 const answer = new Map();
 const optiontext = new Map();
 
@@ -56,7 +57,7 @@ function init() {
 
     //--- Event listener for sumbiting
     const myform = document.getElementById('myform');
-    myform.addEventListener('submit', function (e) {
+    myform.addEventListener('submit', function(e) {
         e.preventDefault();
         skip.style.display = "none";
         let id = qmap.get(currentqID);
@@ -66,7 +67,7 @@ function init() {
                 optiontext.set(currentOID, selected);
             }
         }
-        if(nextqID == 'null') {
+        if (nextqID == 'null') {
             showResults();
         } else {
             iterate(nextqID);
@@ -76,7 +77,8 @@ function init() {
     //--- Shows results
     function showResults() {
         const resultdiv = document.getElementById('questionnaire');
-        resultdiv.innerHTML = `<ul id="results"></ul>`
+        resultdiv.style.marginTop = "10%"
+        resultdiv.innerHTML = `<table style="border:solid; font-size: large;" class="table" id="results"></ul>`
         const mylist = document.getElementById('results');
         const iter = answer.entries();
         let ivalue = iter.next();
@@ -97,12 +99,17 @@ function init() {
             }
 
             const otext = optiontext.get(ivalue.value[1]);
-            mylist.innerHTML += `<li class="display-flex"><h4>${text}<h4> -> <h3 style="color: #0f420e;">${otext}</h3></li>`
+            mylist.innerHTML += `
+            <tr>
+                <th scope="col">${text}</th>
+                <td style="width: 50%;"  scope="col">${otext}</td>
+            </tr>`
             ivalue = iter.next();
         }
+        resultButton.style.marginTop = "10%";
         resultButton.style.display = "flex";
         resultButton.addEventListener('click', e => {
-            e.preventDefault;
+            e.preventDefault();
             const iterator = answer.entries();
             let results = iterator.next();
             while (!results.done) {
@@ -113,7 +120,7 @@ function init() {
             }
 
             alert("Thanks for answering!")
-            setTimeout(function () { window.location.href = ".."; }, 1000);
+            setTimeout(function() { window.location.href = ".."; }, 1000);
         })
     }
 
@@ -133,7 +140,7 @@ function init() {
                     }
                 })
             }
-            radio.addEventListener('input', function (event) {
+            radio.addEventListener('input', function(event) {
                 event.preventDefault();
                 selected = event.target.value;
                 if (event.target.type != 'text') {
@@ -170,19 +177,6 @@ function init() {
         question.innerText = rendered_text;
         const showoptions = document.getElementById("option-container");
         showoptions.innerHTML = "";
-        if (qdata.questions[id].required == 'FALSE') {
-            skip.style.display = "flex";
-            skip.addEventListener('click', event => {
-                for (let index = 0; index < qdata.questions[id].options.length; index++) {
-                    if (qdata.questions[id].options[index].nextqID == null) {
-                        showResults();
-                    } else {
-                        skip.style.display = "none";
-                        iterate(qdata.questions[id + 1].qID);
-                    }
-                }
-            });
-        }
         for (let index = 0; index < qdata.questions[id].options.length; index++) {
             if (qdata.questions[id].options[index].opttxt == '<open string>') {
                 showoptions.innerHTML += `
@@ -195,8 +189,23 @@ function init() {
                 `
             }
         }
-
+        if (qdata.questions[id].required == 'FALSE') {
+            skip.style.display = "flex";
+            skip.addEventListener('click', event => {
+                event.preventDefault();
+                for (let index = 0; index < qdata.questions[id].options.length; index++) {
+                    if (qdata.questions[id].options[index].nextqID == null) {
+                        showResults();
+                    } else {
+                        isSkipped = true;
+                        skip.style.display = "none";
+                        iterate(qdata.questions[id + 1].qID);
+                    }
+                }
+            });
+        }
         getAnswer(qid);
+
     }
 
     //--- Start

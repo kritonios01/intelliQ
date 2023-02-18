@@ -83,13 +83,15 @@ A [Postman](https://www.postman.com/) version 2.1 collection file can be found [
 This collection includes the full API structure and thorough test scripts which may be used to verify correct functionality of the service.
 
 ### Command Line Interface
-CLI tests are performed using the [cli_tests.sh](test/cli/cli_tests.sh) shell script.
+CLI unit tests can be performed using the pytest library with [test_unit_cli.py](cli/test_unit_cli.py). To run the unit tests, you should navigate to the cli directory and run the command $ pytest (-v) (-v is used for more details).
+A CLI functional test is located in [functional_test_cli.py](test/cli/functional_test_cli.py). To run it simply type $ python ./functional_test_cli.py.
+CLI tests can also be performed using the [cli_tests.sh](test/cli/cli_tests.sh) shell script.
 
 ## Project Team
-| Full Name           | Registration Number  |
-| ------------------- | -------------------- |
-| Ioannis Basdekis    | 03119198             |
-| Ioannis Dressos     | 03119608             |
-| Kriton Iordanidis   | 03119604             |
-| Pantelis Emmanouil  | 03119018             |
-| Panagiotis Tsakonas | 03119610             |
+| Full Name             | Registration Number  |
+| --------------------- | -------------------- |
+| Ioannis Basdekis      | 03119198             |
+| Ioannis Dressos       | 03119608             |
+| Kriton Iordanidis     | 03119604             |
+| Panteleimon Emmanouil | 03119018             |
+| Panagiotis Tsakonas   | 03119610             |
