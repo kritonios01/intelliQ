@@ -15,7 +15,7 @@ function fetcher() {
         .then((res) => {
             if (res.status == 204) {
                 loader.style.display = "none";
-                mainMessage.innerText = "No Questionnaires Available"
+                mainMessage.innerText = "No questionnaires available."
             } else {
                 res.json()
                     .then((data) => {
