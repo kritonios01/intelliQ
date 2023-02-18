@@ -59,16 +59,16 @@ This implementation of the intelliQ specification is compatible with MariaDB.
 The installation and configuration process for MariaDB differs depending on the operating system.  
 Please refer to the [official documentation](https://mariadb.com/kb/en/getting-installing-and-upgrading-mariadb/) for instructions.
 
-Make sure to initialise the database using [schema.sql](scripts/mariadb/schema.sql):
+__Make sure to initialise the database using [schema.sql](scripts/mariadb/schema.sql):__
 ```shell
 $ mysql -u <user> [-p] < scripts/mariadb/schema.sql
 ```
 
 ### Frontend
 You may use the web server of your choise ([Apache](https://httpd.apache.org/), [Nginx](https://www.nginx.com/), ..)  
-Simply drag and drop the contents of the [frontend](frontend/) folder into the root directory of your site.
+Simply drag and drop the contents of the [frontend](frontend/) folder into the document root directory of your site.
 
-__Depending on how you deployed the rest of the components, you may need to configure the server URL to use for API queries.__
+__You will need to configure the server URL to use for API queries depending on your deployment. Please refer to [config.js](frontend/js/config/config.js)__
 
 ## Creating a self-signed SSL certificate
 ```shell
@@ -83,9 +83,14 @@ A [Postman](https://www.postman.com/) version 2.1 collection file can be found [
 This collection includes the full API structure and thorough test scripts which may be used to verify correct functionality of the service.
 
 ### Command Line Interface
-CLI unit tests can be performed using the pytest library with [test_unit_cli.py](cli/test_unit_cli.py). To run the unit tests, you should navigate to the cli directory and run the command $ pytest (-v) (-v is used for more details).
-A CLI functional test is located in [functional_test_cli.py](test/cli/functional_test_cli.py). To run it simply type $ python ./functional_test_cli.py.
+CLI unit tests can be performed using the pytest library with [test_unit_cli.py](cli/test_unit_cli.py). To run the unit tests, navigate to the [cli/](cli/) directory and run ``$ pytest [-v]``.  
+A CLI functional test is located in [functional_test_cli.py](test/cli/functional_test_cli.py). To run it use ``$ python3 cli/functional_test_cli.py``.  
 CLI tests can also be performed using the [cli_tests.sh](test/cli/cli_tests.sh) shell script.
+
+## API Documentation
+API documentation is available in OpenAPI 3.0 format [here](https://app.swaggerhub.com/apis/ntua-el19608/intelliQ-API/1.0.0).  
+It is included in the API application and enabled by default. You can find it at ``{API_HOST}/docs``.  
+An instance is also available on the [live demo server](https://api.intelliq.site/docs).
 
 ## Project Team
 | Full Name             | Registration Number  |
