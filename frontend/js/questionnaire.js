@@ -78,7 +78,7 @@ function init() {
     function showResults() {
         const resultdiv = document.getElementById('questionnaire');
         resultdiv.style.marginTop = "10%"
-        resultdiv.innerHTML = `<table style="border:solid; font-size: large;" class="table" id="results"></ul>`
+        resultdiv.innerHTML = `<table style="font-size: medium;" class="table" id="results"></ul>`
         const mylist = document.getElementById('results');
         const iter = answer.entries();
         let ivalue = iter.next();
